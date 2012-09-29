@@ -11,14 +11,14 @@
     };
 
     cp.template.Level = cp.template.Entity.extend({
-        name: 'level1',
+        name: 'level',
 
         init: function () {
             // Used to determine the width of the game's play area
             this.bind();
 
             if (_debug) {
-                cp.game.spawn('Player');
+                cp.game.spawn('ActivePlayer');
                 cp.game.spawn('RemotePlayer');
             }
         },
