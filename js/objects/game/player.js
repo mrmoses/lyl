@@ -7,7 +7,11 @@
     /** @type {number} Cached reference of game's play area */
     var _gameHeight = null;
 
+
+    var _playerSize = 10;
+
     cp.template.Player = cp.template.Entity.extend({
+    	type: 0,
         name: 'player', // Do not remove, used for search functionality elsewhere
 
         width: 80,
@@ -25,7 +29,7 @@
         turnRight: false,
 
 
-        init: function (x, y) {
+        init: function (x, y, serverID) {
             if (_gameWidth === null) {
                 _gameWidth = cp.core.canvasWidth;
             }
@@ -45,6 +49,9 @@
             // Set boundaries
             this.boundaryRight = _gameWidth - this.width;
             this.boundaryBottom = _gameHeight - this.height;
+
+            // Set ID
+            this.id = serverID;
         },
 
         draw: function() {
@@ -81,17 +88,11 @@
          */
         update: function () {
             //this._super();
+
             //console.log(Math.round(cp.input.accel.x / 120));
             if (window.DeviceMotionEvent) {
                 this.speedX = this.x += Math.round(cp.input.accel.x / 10 * -1);
                 this.speedY = this.y += Math.round(cp.input.accel.y / 10 * -1);
-
-                //this.speedX = Math.round(cp.input.accel.x / 20 * -1);
-                //this.speedY = Math.round(cp.input.accel.y / 20 * -1);
-                //
-                //// update our position based on our angle and speed
-                //this.x = this.x + this.speedX;
-                //this.y = this.y + this.speedY;
             } else {
                 // left
                 if (cp.input.press('left')) {
@@ -122,6 +123,9 @@
                 this.x = this.x + this.speed * Math.cos(this.angle);
                 this.y = this.y + this.speed * Math.sin(this.angle);
             }
+
+            //console.log(cp.input.accel.alpha);
+
 
 			//if hitting east side
 			if(this.x > this.boundaryRight - 5) {
@@ -166,5 +170,59 @@
             cp.game.spawn('Continue', this);
             this._super();
         }
+
     });
+
+    cp.template.ActivePlayer = cp.template.Player.extend({
+    	type: 'a',
+
+    	update: function(){
+    		//// Update our input
+            // left
+            if (cp.input.press('left')) {
+				this.turnLeft();
+
+            // Right
+            } else if (cp.input.press('right')) {
+				this.turnRight();
+
+            // Up
+            } else if (cp.input.press('up')) {
+            	/* use accelleration */
+				if (this.speed < this.maxSpeed)
+					this.speed += this.accelRate;
+				/* */
+
+            // Down
+            } else if (cp.input.press('down') && this.y < this.boundaryBottom) {
+				this.speed = 0;
+            }
+
+            if(cp.input.up('up')) {
+            	console.log("up key released");
+            	this.speed = 0;
+            }
+
+            // Call the Player Update
+            this._super;
+    	}
+    });
+
+    cp.template.RemotePlayer = cp.template.Player.extend({
+    	type: 'b',
+
+    	update: function(){
+    		//// Speed, Position is updated by the server
+    		this._super;
+    	},
+
+    	updateStats: function(){
+    		// Updates speed, position, etc
+    		//this.speed = whateverFromServer;
+    		//this.x =
+    		//this.y =
+    		//this.angle =
+    	}
+    });
+
 }(cp));
