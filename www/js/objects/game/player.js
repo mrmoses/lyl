@@ -36,27 +36,24 @@
         turnRight: false,
         keyboard: true,
 
-
         init: function (serverID) {
-            if (this.keyboard) {
-                if (_gameWidth === null) {
-                    _gameWidth = cp.core.canvasWidth;
-                }
-                if (_gameHeight  === null) {
-                    _gameHeight = cp.core.canvasHeight;
-                }
-
-                // Center the player by default
-                this.x = (_gameWidth / 2) - (this.width / 2);
-                this.y = (_gameHeight / 2) - (this.height / 2);
-
-                // Set boundaries
-                this.boundaryRight = _gameWidth - this.width;
-                this.boundaryBottom = _gameHeight - this.height;
-
-                // Set ID
-                this.id = serverID;
+            if (_gameWidth === null) {
+                _gameWidth = cp.core.canvasWidth;
             }
+            if (_gameHeight  === null) {
+                _gameHeight = cp.core.canvasHeight;
+            }
+
+            // Center the player by default
+            this.x = (_gameWidth / 2) - (this.width / 2);
+            this.y = (_gameHeight / 2) - (this.height / 2);
+
+            // Set boundaries
+            this.boundaryRight = _gameWidth - this.width;
+            this.boundaryBottom = _gameHeight - this.height;
+
+            // Set ID
+            this.id = serverID;
         },
 
         draw: function() {
@@ -95,7 +92,7 @@
             //this._super();
 
             //console.log(Math.round(cp.input.accel.x / 120));
-            if (window.DeviceMotionEvent) {
+            if (window.DeviceMotionEvent && this.keyboard) {
                 this.speedX = this.x += Math.round(cp.input.accel.x / 10 * -1);
                 this.speedY = this.y += Math.round(cp.input.accel.y / 10 * -1);
             } else {
