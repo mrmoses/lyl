@@ -15,7 +15,5 @@
         cp.input.bind('arrowDown', 'down');
         cp.input.bind('arrowLeft', 'left');
         cp.input.bind('arrowRight', 'right');
-
-        cp.game.spawn('Player');
     });
 }(cp));

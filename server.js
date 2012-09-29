@@ -218,13 +218,57 @@ var server = {
 };
 
 var app = server.init();
-        
+
+/* Multiplayer Dragons be here */
+var player1 = '';
+var player2 = '';
+var viewers = []; //array to hold viewers
+
 /* */
 io = require('socket.io').listen(app);
 io.sockets.on('connection', function (socket) {
-  socket.emit('news', { hello: 'world' });
-  socket.on('my other event', function (data) {
-    console.log(data);
-  });
+	this.clientId = socket.id;
+	console.log('player connected');
+	
+	// sends message to client to let them know they are connected
+	socket.emit('clientlog', {msg:"sockets are socketized"});
+	
+	//if player 1 is available
+	if(!player1) {
+		console.log("player 1 connected");
+		player1 = this.clientId;
+		
+		socket.emit('spawn-active-player', {id:this.clientId});
+		
+	//else if player 2 is available
+	} else if (!player2) {
+		console.log("player 2 connected");
+		player2 = socket.id;
+		
+		socket.emit('spawn-active-player', {id:this.clientId});
+		
+		socket.emit('spawn-remote-player', {id: player1});
+		
+	//otherwise they are just a viewer
+	} else {
+		console.log("viewer connected");
+		
+		socket.emit('spawn-remote-player', {id: player1});
+		socket.emit('spawn-remote-player', {id: player2});
+	}
+
+	// when a player moves, send data to other clients
+  	socket.on('player-server-update', function (data) {
+  		socket.broadcast.emit('player-client-update', data);
+  	});
+	
+	/* when a client disconnects */
+  	socket.on('disconnect', function () {
+		io.sockets.emit('user disconnected');
+  		if(this.playerid) {
+  			console.log("player disconnected");
+  			console.log(this.playerid);
+  		}
+  	});
 });
 /* */
