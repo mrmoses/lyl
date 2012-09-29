@@ -9,6 +9,8 @@
     var _gameHeight = null;
 
     var _playerSize = 10;
+    
+    var _debug = true;
 
     var _private = {
         calcMag: function (obj) {
@@ -36,6 +38,8 @@
         turnRate: 0.025,
         turnLeft: false,
         turnRight: false,
+        
+        inCollision: false,
 
         init: function (serverID) {
             if (_gameWidth === null) {
@@ -120,9 +124,9 @@
 				this.y = 5;
 			}
 
-            if(this.speed) {
-	    		socket.emit('entity-server-update', { id: this.id, x: this.x, y: this.y} );
-            }
+           // if(this.speed) {
+	    	//	socket.emit('entity-server-update', { id: this.id, x: this.x, y: this.y} );
+          //  }
         },
 
 		turnLeft: function() {
@@ -145,6 +149,13 @@
                 } else {
                     console.log('player smash');
                 }
+                obj.speedY *= -1;
+                obj.speedX *= -1;
+                obj.x = obj.x + obj.speedX * cp.core.delta * 1/16; // times momentum
+                obj.y = obj.y + obj.speedY * cp.core.delta * 1/16; // times momentum            
+                this.x = this.x + this.speedX * cp.core.delta *1/16; // times momentum
+                this.y = this.y + this.speedY * cp.core.delta *1/16; // times momentum
+
 
             // Must be a powerup
             } else {
@@ -173,65 +184,61 @@
                 this.speedX = Math.round(cp.input.accel.x / 10 * -1);
                 this.speedY = Math.round(cp.input.accel.y / 10 * -1);
             } else {
-                //if(this.keyboard)
-              //  {
-                    // left
-                    if (cp.input.press('left')) {
-                        //this.turnLeft();
-                        if(this.speedX > this.minSpeed)
-                        {
-                            this.speedX -= 1;
-                        }
-                    // Right
-                    } else if (cp.input.press('right')) {
-                        //this.turnRight();
-                        if(this.speedX < this.maxSpeed)
-                        {
-                            this.speedX += 1;
-                        }
-    
-                    // Up
-                    } else if (cp.input.press('up')) {
-                        /* use accelleration */
-                        //if (this.speed < this.maxSpeed)
-                         //   this.speed += this.accelRate;
-                        if(this.speedY > this.minSpeed)
-                        {
-                            this.speedY -= 1;
-                        }
-                        
-                    // Down
-                    } else if (cp.input.press('down')) {
-                        if(this.speedY < this.maxSpeed)
-                        {
-                            this.speedY += 1;
-                        }
+                // left
+                if (cp.input.press('left')) {
+                    //this.turnLeft();
+                    if(this.speedX > this.minSpeed)
+                    {
+                        this.speedX -= 1;
+                    }
+                // Right
+                } else if (cp.input.press('right')) {
+                    //this.turnRight();
+                    if(this.speedX < this.maxSpeed) {
+                        this.speedX += 1;
+                    }
+
+                // Up
+                } else if (cp.input.press('up')) {
+                    /* use accelleration */
+                    //if (this.speed < this.maxSpeed)
+                     //   this.speed += this.accelRate;
+                    if(this.speedY > this.minSpeed)
+                    {
+                        this.speedY -= 1;
                     }
                     
-                    // Decay speed
-                    var zero = 0;
-                    if(cp.input.up('up')) {
-                        if(this.speedY > zero)
-                        {
-                            this.speedY -= 1;
-                        }
-                    } if(cp.input.up('down')) {
-                        if(this.speedY < 0)
-                        {
-                            this.speedY += 1;
-                        }
-                    } if(cp.input.up('left')) {
-                        if(this.speedX < 0)
-                        {
-                            this.speedx += 1;
-                        }
-                    } if(cp.input.up('right')) {
-                        if(this.speedX > 0)
-                        {
-                            this.speedx -= 1;
-                        }
+                // Down
+                } else if (cp.input.press('down')) {
+                    if(this.speedY < this.maxSpeed)
+                    {
+                        this.speedY += 1;
                     }
-               // }
+                }
+                
+                // Decay speed
+                var zero = 0;
+                if(cp.input.up('up')) {
+                    if(this.speedY > zero)
+                    {
+                        this.speedY -= 1;
+                    }
+                } if(cp.input.up('down')) {
+                    if(this.speedY < 0)
+                    {
+                        this.speedY += 1;
+                    }
+                } if(cp.input.up('left')) {
+                    if(this.speedX < 0)
+                    {
+                        this.speedx += 1;
+                    }
+                } if(cp.input.up('right')) {
+                    if(this.speedX > 0)
+                    {
+                        this.speedx -= 1;
+                    }
+                }
                 
             }
 
@@ -242,6 +249,14 @@
 
     cp.template.RemotePlayer = cp.template.Player.extend({
     	type: 'b',
+    	
+    	init: function () {
+    	    this._super(arguments);
+    	    if (_debug) {
+    	        this.x += 300;
+    	        this.y += 300;
+    	    }
+    	},
 
     	update: function(){
     		//// Speed, Position is updated by the server
