@@ -17,5 +17,6 @@
         cp.input.bind('arrowRight', 'right');
 
         cp.game.spawn('Player');
+        cp.game.spawn('RemotePlayer');
     });
 }(cp));

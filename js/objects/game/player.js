@@ -4,14 +4,21 @@
 (function(cp) {
     /** @type {number} Cached reference of game's play area */
     var _gameWidth = null;
+
     /** @type {number} Cached reference of game's play area */
     var _gameHeight = null;
 
-
     var _playerSize = 10;
 
+    var _private = {
+        calcMag: function (obj) {
+            var speedCalc = obj.speedX * obj.speedX + obj.speedY * obj.speedY;
+            return Math.sqrt(speedCalc);
+        }
+    };
+
     cp.template.Player = cp.template.Entity.extend({
-    	type: 0,
+    	type: 'a',
         name: 'player', // Do not remove, used for search functionality elsewhere
 
         width: 80,
@@ -27,6 +34,7 @@
         turnRate: 0.025,
         turnLeft: false,
         turnRight: false,
+        keyboard: true,
 
 
         init: function (x, y, serverID) {
@@ -94,34 +102,38 @@
                 this.speedX = this.x += Math.round(cp.input.accel.x / 10 * -1);
                 this.speedY = this.y += Math.round(cp.input.accel.y / 10 * -1);
             } else {
-                // left
-                if (cp.input.press('left')) {
-                    this.turnLeft();
+                if (this.keyboard) {
+                    // left
+                    if (cp.input.press('left')) {
+                        this.turnLeft();
 
-                // Right
-                } else if (cp.input.press('right')) {
-                    this.turnRight();
+                    // Right
+                    } else if (cp.input.press('right')) {
+                        this.turnRight();
 
-                // Up
-                } else if (cp.input.press('up')) {
-                    /* use accelleration */
-                    if (this.speed < this.maxSpeed)
-                        this.speed += this.accelRate;
-                    /* */
+                    // Up
+                    } else if (cp.input.press('up')) {
+                        /* use accelleration */
+                        if (this.speed < this.maxSpeed)
+                            this.speed += this.accelRate;
+                        /* */
 
-                // Down
-                } else if (cp.input.press('down') && this.y < this.boundaryBottom) {
-                    this.speed = 0;
+                    // Down
+                    } else if (cp.input.press('down') && this.y < this.boundaryBottom) {
+                        this.speed = 0;
+                    }
+
+                    if(cp.input.up('up')) {
+                        console.log("up key released");
+                        this.speed = 0;
+                    }
                 }
 
-                if(cp.input.up('up')) {
-                    console.log("up key released");
-                    this.speed = 0;
-                }
 
                 // update our position based on our angle and speed
                 this.x = this.x + this.speed * Math.cos(this.angle);
                 this.y = this.y + this.speed * Math.sin(this.angle);
+                this.speedX = this.speedY = this.speed;
             }
 
             //console.log(cp.input.accel.alpha);
@@ -157,10 +169,15 @@
 			this.angle = (this.angle + direction * this.turnRate) % (2 * Math.PI);
 		},
 
-        collide: function () {
-            this.hit = true;
-            this.kill();
-            ++this.deathCount;
+        collide: function (obj) {
+            // Who hit who?
+            if (_private.calcMag(this) > _private.calcMag(obj)) {
+                console.log('enemy smash');
+            } else {
+                console.log('player smash');
+            }
+
+            //this.deathCount += 1;
         },
 
         kill: function () {
@@ -204,16 +221,17 @@
             }
 
             // Call the Player Update
-            this._super;
+            this._super();
     	}
     });
 
     cp.template.RemotePlayer = cp.template.Player.extend({
     	type: 'b',
+        keyboard: false,
 
     	update: function(){
     		//// Speed, Position is updated by the server
-    		this._super;
+    		this._super();
     	},
 
     	updateStats: function(){
@@ -222,7 +240,11 @@
     		//this.x =
     		//this.y =
     		//this.angle =
-    	}
+    	},
+
+        collide: function() {
+
+        }
     });
 
 }(cp));
