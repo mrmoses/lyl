@@ -257,9 +257,9 @@ io.sockets.on('connection', function (socket) {
 		socket.emit('spawn-remote-player', {id: player2});
 	}
 
-	// when a player moves, send data to other clients
-  	socket.on('player-server-update', function (data) {
-  		socket.broadcast.emit('player-client-update', data);
+	// when a entity is updated on an active client, send data to other clients
+  	socket.on('entity-server-update', function (data) {
+  		socket.broadcast.emit('entity-client-update', data);
   	});
 	
 	/* when a client disconnects */

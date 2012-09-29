@@ -37,14 +37,9 @@
                 _gameHeight = cp.core.canvasHeight;
             }
 
-            // Set player's position manually
-            if (x !== undefined) {
-                this.x = x;
-                this.y = y;
-            } else { // Center the player by default
-                this.x = (_gameWidth / 2) - (this.width / 2);
-                this.y = (_gameHeight / 2) - (this.height / 2);
-            }
+            // Center the player by default
+            this.x = (_gameWidth / 2) - (this.width / 2);
+            this.y = (_gameHeight / 2) - (this.height / 2);
 
             // Set boundaries
             this.boundaryRight = _gameWidth - this.width;
@@ -145,7 +140,7 @@
 			}
             
             if(this.speed) {
-	    		socket.emit('player-server-update', { id: this.id, x: this.x, y: this.y} );
+	    		socket.emit('entity-server-update', { id: this.id, x: this.x, y: this.y} );
             }
         },
 
