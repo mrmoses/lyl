@@ -121,7 +121,7 @@
 				this.y = 5;
 			}
 
-            if(this.speed) {
+            if(this.speedX || this.spedY) {
 	    		socket.emit('entity-server-update', { id: this.id, x: this.x, y: this.y} );
             }
         },
