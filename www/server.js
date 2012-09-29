@@ -8,7 +8,10 @@
 var SELF = null;
 
 /** @type {number} Port to run the application from */
-var PORT = process.env.PORT || 5000;
+// HEROKU
+//var PORT = process.env.PORT || 5000;
+// dotcloud
+var PORT = process.env.PORT || 8080;
 
 /** @type {object} Loads in file helper script for combining files */
 var _files = require('./compiler/helpers/files.js').files;

@@ -38,7 +38,6 @@
         turnRight: false,
         keyboard: true,
 
-
         init: function (serverID) {
             if (_gameWidth === null) {
                 _gameWidth = cp.core.canvasWidth;
@@ -96,6 +95,7 @@
 
             //console.log(Math.round(cp.input.accel.x / 120));
 
+
             //// update our position based on our speed
             this.x = this.x + this.speedX; // times delta time, times momentum
             this.y = this.y + this.speedY; // times delta time, times momentum
@@ -139,7 +139,6 @@
 		},
 
         collide: function (obj) {
-
             if (obj.name === 'player') {
                 // Who hit who?
                 if (_private.calcMag(this) > _private.calcMag(obj)) {
@@ -152,7 +151,6 @@
             } else {
 
             }
-
 
             //this.deathCount += 1;
         },
@@ -172,65 +170,70 @@
 
     	update: function(){
     		//// Update our input
-            if (window.DeviceMotionEvent) {
+            if (window.DeviceMotionEvent && this.keyboard) {
                 this.speedX = Math.round(cp.input.accel.x / 10 * -1);
                 this.speedY = Math.round(cp.input.accel.y / 10 * -1);
             } else {
-                // left
-                if (cp.input.press('left')) {
-                    //this.turnLeft();
-                    if(this.speedX > this.minSpeed)
-                    {
-						this.speedX -= 1;
-                    }
-                // Right
-                } else if (cp.input.press('right')) {
-                    //this.turnRight();
-                    if(this.speedX < this.maxSpeed)
-                    {
-						this.speedX += 1;
-                    }
-
-                // Up
-                } else if (cp.input.press('up')) {
-                    /* use accelleration */
-                    //if (this.speed < this.maxSpeed)
-                     //   this.speed += this.accelRate;
-                    if(this.speedY > this.minSpeed)
-                    {
-                    	this.speedY -= 1;
+                if(this.keyboard)
+                {
+                    // left
+                    if (cp.input.press('left')) {
+                        //this.turnLeft();
+                        if(this.speedX > this.minSpeed)
+                        {
+                            this.speedX -= 1;
+                        }
+                    // Right
+                    } else if (cp.input.press('right')) {
+                        //this.turnRight();
+                        if(this.speedX < this.maxSpeed)
+                        {
+                            this.speedX += 1;
+                        }
+    
+                    // Up
+                    } else if (cp.input.press('up')) {
+                        /* use accelleration */
+                        //if (this.speed < this.maxSpeed)
+                         //   this.speed += this.accelRate;
+                        if(this.speedY > this.minSpeed)
+                        {
+                            this.speedY -= 1;
+                        }
+                        
+                    // Down
+                    } else if (cp.input.press('down')) {
+                        if(this.speedY < this.maxSpeed)
+                        {
+                            this.speedY += 1;
+                        }
                     }
                     
-                // Down
-                } else if (cp.input.press('down')) {
-                	if(this.speedY < this.maxSpeed)
-                    {
-                    	this.speedY += 1;
+                    // Decay speed
+                    if(cp.input.up('up')) {
+                        if(this.speedY > 0)
+                        {
+                            this.speedY -= 1;
+                            console.log("speed reduced");
+                        }
+                    } if(cp.input.up('down')) {
+                        if(this.speedY < 0)
+                        {
+                            this.speedY += 1;
+                        }
+                    } if(cp.input.up('left')) {
+                        if(this.speedX < 0)
+                        {
+                            this.speedx += 1;
+                        }
+                    } if(cp.input.up('right')) {
+                        if(this.speedX > 0)
+                        {
+                            this.speedx -= 1;
+                        }
                     }
                 }
                 
-                // Decay speed
-                if(cp.input.up('up')) {
-                    if(this.speedY > 0)
-                    {
-                        this.speedY -= 1;
-                    }
-                } if(cp.input.up('down')) {
-                    if(this.speedY < 0)
-                    {
-                        this.speedY += 1;
-                    }
-                } if(cp.input.up('left')) {
-                    if(this.speedX < 0)
-                    {
-                        this.speedx += 1;
-                    }
-                } if(cp.input.up('right')) {
-                    if(this.speedX > 0)
-                    {
-                        this.speedx -= 1;
-                    }
-                }
             }
 
             // Call the Player Update
