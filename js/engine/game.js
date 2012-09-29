@@ -60,6 +60,7 @@ var cp = cp || {};
         spawn: function(name, x, y) {
             // Create the entity and temporarily store it for reference purposes
             var entity = new cp.template[name];
+            entity.id = cp.core.idNew();
 
             // Apply the passed parameters to init
             if (arguments.length > 1 && entity.init) {
@@ -73,7 +74,6 @@ var cp = cp || {};
 
             // Pushes your new variable into an array
             cp.core.storage.push(entity);
-            entity.id = cp.core.idNew();
 
             // Push into type storage for quicker collision detection
             switch (entity.type) {

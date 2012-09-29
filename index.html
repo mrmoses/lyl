@@ -23,7 +23,7 @@
     <!-- END_COMPILER_REPLACE -->
 
     <script src="/socket.io/socket.io.js"></script>
-	<script>
+	<script type="text/javascript">
 		console.log("socketizing sockets");
 	  var socket = io.connect('http://localhost');
 	  
@@ -43,8 +43,13 @@
 	  	cp.game.spawn('RemotePlayer', data.id);
 	  });
 	  
-	  socket.on('entity-update', function(data) {
-	  	console.log('update entity', data);
+	  socket.on('entity-client-update', function(data) {
+	  	var entity = cp.game.entityGetVal('id',data.id)[0];
+	  	console.log('update entity', entity, data);
+	  	for(var prop in data) {
+	  		console.log("updating entity", prop, entity[prop], data[prop])
+	  		entity[prop] = data[prop];
+	  	}
 	  });
 	</script>
 </body>
