@@ -10,7 +10,7 @@
 
     var _playerSize = 10;
     
-    var _debug = true;
+    var _debug = false;
 
     var _private = {
         calcMag: function (obj) {
@@ -244,19 +244,6 @@
 
     cp.template.RemotePlayer = cp.template.Player.extend({
     	type: 'b',
-    	
-    	init: function () {
-    	    this._super(arguments);
-    	    if (_debug) {
-    	        this.x += 300;
-    	        this.y += 300;
-    	    }
-    	},
-
-        init: function () {
-            _enemy =
-            this._super();
-        },
 
     	update: function(){
     		//// Speed, Position is updated by the server
