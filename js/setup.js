@@ -17,6 +17,6 @@
         cp.input.bind('arrowRight', 'right');
 
         cp.game.spawn('ActivePlayer');
-        cp.game.spawn('RemotePlayer');
+        //cp.game.spawn('RemotePlayer');
     });
 }(cp));
