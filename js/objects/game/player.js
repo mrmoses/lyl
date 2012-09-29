@@ -6,8 +6,12 @@
     var _gameWidth = null;
     /** @type {number} Cached reference of game's play area */
     var _gameHeight = null;
+    
+    
+    var _playerSize = 10;
 
     cp.template.Player = cp.template.Entity.extend({
+    	type: 0,
         name: 'player', // Do not remove, used for search functionality elsewhere
 
         width: 80,
@@ -25,7 +29,7 @@
         turnRight: false,
 
 
-        init: function (x, y) {
+        init: function (x, y, serverID) {
             if (_gameWidth === null) {
                 _gameWidth = cp.core.canvasWidth;
             }
@@ -45,6 +49,9 @@
             // Set boundaries
             this.boundaryRight = _gameWidth - this.width;
             this.boundaryBottom = _gameHeight - this.height;
+            
+            // Set ID
+            this.id = serverID;
         },
 
         draw: function() {
@@ -82,31 +89,6 @@
         update: function () {
             //this._super();
             //console.log(cp.input.accel.alpha);
-
-            // left
-            if (cp.input.press('left')) {
-				this.turnLeft();
-
-            // Right
-            } else if (cp.input.press('right')) {
-				this.turnRight();
-
-            // Up
-            } else if (cp.input.press('up')) {
-            	/* use accelleration */
-				if (this.speed < this.maxSpeed)
-					this.speed += this.accelRate;
-				/* */
-
-            // Down
-            } else if (cp.input.press('down') && this.y < this.boundaryBottom) {
-				this.speed = 0;
-            }
-
-            if(cp.input.up('up')) {
-            	console.log("up key released");
-            	this.speed = 0;
-            }
 
 			// update our position based on our angle and speed
 			this.x = this.x + this.speed * Math.cos(this.angle);
@@ -155,5 +137,59 @@
             cp.game.spawn('Continue', this);
             this._super();
         }
+        
     });
+    
+    cp.template.ActivePlayer = cp.template.Player.extend({
+    	type: 'a',
+    	
+    	update: function(){    		
+    		//// Update our input
+            // left
+            if (cp.input.press('left')) {
+				this.turnLeft();
+
+            // Right
+            } else if (cp.input.press('right')) {
+				this.turnRight();
+
+            // Up
+            } else if (cp.input.press('up')) {
+            	/* use accelleration */
+				if (this.speed < this.maxSpeed)
+					this.speed += this.accelRate;
+				/* */
+
+            // Down
+            } else if (cp.input.press('down') && this.y < this.boundaryBottom) {
+				this.speed = 0;
+            }
+
+            if(cp.input.up('up')) {
+            	console.log("up key released");
+            	this.speed = 0;
+            }
+            
+            // Call the Player Update
+            this._super;
+    	}
+    });
+    
+    cp.template.RemotePlayer = cp.template.Player.extend({
+    	type: 'b',
+    	
+    	update: function(){
+    		//// Speed, Position is updated by the server
+    		this._super;
+    	},
+    	
+    	updateStats: function(){
+    		// Updates speed, position, etc
+    		//this.speed = whateverFromServer;
+    		//this.x = 
+    		//this.y = 
+    		//this.angle = 
+    	}
+    });
+        	
 }(cp));
