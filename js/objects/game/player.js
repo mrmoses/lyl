@@ -81,36 +81,47 @@
          */
         update: function () {
             //this._super();
-            //console.log(cp.input.accel.alpha);
+            //console.log(Math.round(cp.input.accel.x / 120));
+            if (window.DeviceMotionEvent) {
+                this.speedX = this.x += Math.round(cp.input.accel.x / 10 * -1);
+                this.speedY = this.y += Math.round(cp.input.accel.y / 10 * -1);
 
-            // left
-            if (cp.input.press('left')) {
-				this.turnLeft();
+                //this.speedX = Math.round(cp.input.accel.x / 20 * -1);
+                //this.speedY = Math.round(cp.input.accel.y / 20 * -1);
+                //
+                //// update our position based on our angle and speed
+                //this.x = this.x + this.speedX;
+                //this.y = this.y + this.speedY;
+            } else {
+                // left
+                if (cp.input.press('left')) {
+                    this.turnLeft();
 
-            // Right
-            } else if (cp.input.press('right')) {
-				this.turnRight();
+                // Right
+                } else if (cp.input.press('right')) {
+                    this.turnRight();
 
-            // Up
-            } else if (cp.input.press('up')) {
-            	/* use accelleration */
-				if (this.speed < this.maxSpeed)
-					this.speed += this.accelRate;
-				/* */
+                // Up
+                } else if (cp.input.press('up')) {
+                    /* use accelleration */
+                    if (this.speed < this.maxSpeed)
+                        this.speed += this.accelRate;
+                    /* */
 
-            // Down
-            } else if (cp.input.press('down') && this.y < this.boundaryBottom) {
-				this.speed = 0;
+                // Down
+                } else if (cp.input.press('down') && this.y < this.boundaryBottom) {
+                    this.speed = 0;
+                }
+
+                if(cp.input.up('up')) {
+                    console.log("up key released");
+                    this.speed = 0;
+                }
+
+                // update our position based on our angle and speed
+                this.x = this.x + this.speed * Math.cos(this.angle);
+                this.y = this.y + this.speed * Math.sin(this.angle);
             }
-
-            if(cp.input.up('up')) {
-            	console.log("up key released");
-            	this.speed = 0;
-            }
-
-			// update our position based on our angle and speed
-			this.x = this.x + this.speed * Math.cos(this.angle);
-			this.y = this.y + this.speed * Math.sin(this.angle);
 
 			//if hitting east side
 			if(this.x > this.boundaryRight - 5) {

@@ -40,11 +40,10 @@ var cp = cp || {};
 
     // Acceleromenter logic
     _accel = function (e) {
-        console.log('im running');
-        cp.input.accel.alpha = e.alpha;
-        cp.input.accel.beta = e.beta;
-        cp.input.accel.gamma = e.gamma;
-        cp.input.accel.abs = e.absolute;
+        cp.input.accel.z = cp.math.radiansToDegrees(e.accelerationIncludingGravity.z);
+        cp.input.accel.y = cp.math.radiansToDegrees(e.accelerationIncludingGravity.x);
+        cp.input.accel.x = cp.math.radiansToDegrees(e.accelerationIncludingGravity.y);
+        //cp.input.accel.abs = e.absolute;
     },
 
     // Marks the current key for deletion
@@ -215,9 +214,9 @@ var cp = cp || {};
             cp.ctx.canvas.addEventListener('mousedown', _store, true);
             cp.ctx.canvas.addEventListener('mouseup', _remove, true);
 
-            window.addEventListener('deviceorientation', function(e) {
-                console.log('test');
-            }, false);
+            // Bind device orientation
+            window.addEventListener('devicemotion', _accel, true);
+
 //if (window.DeviceOrientationEvent) {
 //    window.addEventListener("deviceorientation", function( event ) {
 //        //alpha: rotation around z-axis
