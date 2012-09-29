@@ -5,7 +5,8 @@
 
     // List of scripts to load relative to js/objects
     cp.load.loadFiles = [
-        'game/player'
+        'game/player',
+        'game/level'
     ];
 
     // Width, height, and game run logic
