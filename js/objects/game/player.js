@@ -37,7 +37,7 @@
         keyboard: true,
 
 
-        init: function (x, y, serverID) {
+        init: function (serverID) {
             if (_gameWidth === null) {
                 _gameWidth = cp.core.canvasWidth;
             }
@@ -155,6 +155,10 @@
 			if(this.y < 5) {
 				this.y = 5;
 			}
+            
+            if(this.speed) {
+	    		socket.emit('player-server-update', { id: this.id, x: this.x, y: this.y} );
+            }
         },
 
 		turnLeft: function() {
