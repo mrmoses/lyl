@@ -2,7 +2,7 @@
  * @requires models/leveldata.js
  */
 (function (cp) {
-    var _debug = true;
+    var _debug = false;
 
     var _private = {
         gameOver: function () {

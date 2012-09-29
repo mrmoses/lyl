@@ -34,13 +34,13 @@
 	  //server will send request to spawn a player
 	  socket.on('spawn-active-player', function(data, fn) {
 	  	console.log("you are an active player " + data.id);
-	  	cp.game.spawn('ActivePlayer', data.id);
+	  	cp.game.spawn('ActivePlayer', data.id, data.x, data.y);
 	  });
 	  
 	  //server will send request to spawn a player
 	  socket.on('spawn-remote-player', function(data, fn) {
 	  	console.log("adding remote playerr " + data.id);
-	  	cp.game.spawn('RemotePlayer', data.id);
+	  	cp.game.spawn('RemotePlayer', data.id, data.x, data.y);
 	  });
 	  
 	  socket.on('entity-client-update', function(data) {
