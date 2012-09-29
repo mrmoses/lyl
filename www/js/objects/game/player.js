@@ -182,8 +182,6 @@
                     if(this.speedX > this.minSpeed)
                     {
 						this.speedX -= 1;
-						console.log(this.x);
-						console.log(this.speedX)
                     }
                 // Right
                 } else if (cp.input.press('right')) {
@@ -191,8 +189,6 @@
                     if(this.speedX < this.maxSpeed)
                     {
 						this.speedX += 1;
-						console.log(this.x);
-						console.log(this.speedX);
                     }
 
                 // Up
@@ -203,8 +199,6 @@
                     if(this.speedY > this.minSpeed)
                     {
                     	this.speedY -= 1;
-						console.log(this.y);
-						console.log(this.speedY);
                     }
                     
                 // Down
@@ -212,14 +206,31 @@
                 	if(this.speedY < this.maxSpeed)
                     {
                     	this.speedY += 1;
-						console.log(this.y);
-						console.log(this.speedY);
                     }
                 }
-                //if(cp.input.up('up')) {
-                //    console.log("up key released");
-                //    this.speed = 0;
-                //}
+                
+                // Decay speed
+                if(cp.input.up('up')) {
+                    if(this.speedY > 0)
+                    {
+                        this.speedY -= 1;
+                    }
+                } if(cp.input.up('down')) {
+                    if(this.speedY < 0)
+                    {
+                        this.speedY += 1;
+                    }
+                } if(cp.input.up('left')) {
+                    if(this.speedX < 0)
+                    {
+                        this.speedx += 1;
+                    }
+                } if(cp.input.up('right')) {
+                    if(this.speedX > 0)
+                    {
+                        this.speedx -= 1;
+                    }
+                }
             }
 
             // Call the Player Update
