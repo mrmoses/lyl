@@ -34,7 +34,7 @@
 	  //server will send request to spawn a player
 	  socket.on('spawn-active-player', function(data, fn) {
 	  	console.log("you are an active player " + data.id);
-	  	cp.game.spawn('Player', data.id);
+	  	cp.game.spawn('ActivePlayer', data.id);
 	  });
 	  
 	  //server will send request to spawn a player
