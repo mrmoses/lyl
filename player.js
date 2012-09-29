@@ -4,21 +4,14 @@
 (function(cp) {
     /** @type {number} Cached reference of game's play area */
     var _gameWidth = null;
-
     /** @type {number} Cached reference of game's play area */
     var _gameHeight = null;
 
+
     var _playerSize = 10;
 
-    var _private = {
-        calcMag: function (obj) {
-            var speedCalc = obj.speedX * obj.speedX + obj.speedY * obj.speedY;
-            return Math.sqrt(speedCalc);
-        }
-    };
-
     cp.template.Player = cp.template.Entity.extend({
-    	type: 'a',
+    	type: 0,
         name: 'player', // Do not remove, used for search functionality elsewhere
 
         width: 80,
@@ -36,9 +29,9 @@
         turnRate: 0.025,
         turnLeft: false,
         turnRight: false,
-        keyboard: true,
 
-        init: function (serverID) {
+
+        init: function (x, y, serverID) {
             if (_gameWidth === null) {
                 _gameWidth = cp.core.canvasWidth;
             }
@@ -46,9 +39,14 @@
                 _gameHeight = cp.core.canvasHeight;
             }
 
-            // Center the player by default
-            this.x = (_gameWidth / 2) - (this.width / 2);
-            this.y = (_gameHeight / 2) - (this.height / 2);
+            // Set player's position manually
+            if (x !== undefined) {
+                this.x = x;
+                this.y = y;
+            } else { // Center the player by default
+                this.x = (_gameWidth / 2) - (this.width / 2);
+                this.y = (_gameHeight / 2) - (this.height / 2);
+            }
 
             // Set boundaries
             this.boundaryRight = _gameWidth - this.width;
@@ -95,7 +93,6 @@
 
             //console.log(Math.round(cp.input.accel.x / 120));
 
-
             //// update our position based on our speed
             this.x = this.x + this.speedX; // times delta time, times momentum
             this.y = this.y + this.speedY; // times delta time, times momentum
@@ -120,10 +117,6 @@
 			if(this.y < 5) {
 				this.y = 5;
 			}
-
-            if(this.speed) {
-	    		socket.emit('entity-server-update', { id: this.id, x: this.x, y: this.y} );
-            }
         },
 
 		turnLeft: function() {
@@ -138,21 +131,10 @@
 			this.angle = (this.angle + direction * this.turnRate) % (2 * Math.PI);
 		},
 
-        collide: function (obj) {
-            if (obj.name === 'player') {
-                // Who hit who?
-                if (_private.calcMag(this) > _private.calcMag(obj)) {
-                    console.log('enemy smash');
-                } else {
-                    console.log('player smash');
-                }
-
-            // Must be a powerup
-            } else {
-
-            }
-
-            //this.deathCount += 1;
+        collide: function () {
+            this.hit = true;
+            this.kill();
+            ++this.deathCount;
         },
 
         kill: function () {
@@ -170,70 +152,54 @@
 
     	update: function(){
     		//// Update our input
-            if (window.DeviceMotionEvent && this.keyboard) {
+            if (window.DeviceMotionEvent) {
                 this.speedX = Math.round(cp.input.accel.x / 10 * -1);
                 this.speedY = Math.round(cp.input.accel.y / 10 * -1);
             } else {
-                if(this.keyboard)
-                {
-                    // left
-                    if (cp.input.press('left')) {
-                        //this.turnLeft();
-                        if(this.speedX > this.minSpeed)
-                        {
-                            this.speedX -= 1;
-                        }
-                    // Right
-                    } else if (cp.input.press('right')) {
-                        //this.turnRight();
-                        if(this.speedX < this.maxSpeed)
-                        {
-                            this.speedX += 1;
-                        }
-    
-                    // Up
-                    } else if (cp.input.press('up')) {
-                        /* use accelleration */
-                        //if (this.speed < this.maxSpeed)
-                         //   this.speed += this.accelRate;
-                        if(this.speedY > this.minSpeed)
-                        {
-                            this.speedY -= 1;
-                        }
-                        
-                    // Down
-                    } else if (cp.input.press('down')) {
-                        if(this.speedY < this.maxSpeed)
-                        {
-                            this.speedY += 1;
-                        }
+                // left
+                if (cp.input.press('left')) {
+                    //this.turnLeft();
+                    if(this.speedX > this.minSpeed)
+                    {
+						this.speedX -= 1;
+						console.log(this.x);
+						console.log(this.speedX)
+                    }
+                // Right
+                } else if (cp.input.press('right')) {
+                    //this.turnRight();
+                    if(this.speedX < this.maxSpeed)
+                    {
+						this.speedX += 1;
+						console.log(this.x);
+						console.log(this.speedX);
+                    }
+
+                // Up
+                } else if (cp.input.press('up')) {
+                    /* use accelleration */
+                    //if (this.speed < this.maxSpeed)
+                     //   this.speed += this.accelRate;
+                    if(this.speedY > this.minSpeed)
+                    {
+                    	this.speedY -= 1;
+						console.log(this.y);
+						console.log(this.speedY);
                     }
                     
-                    // Decay speed
-                    if(cp.input.up('up')) {
-                        if(this.speedY > 0)
-                        {
-                            this.speedY -= 1;
-                            console.log("speed reduced");
-                        }
-                    } if(cp.input.up('down')) {
-                        if(this.speedY < 0)
-                        {
-                            this.speedY += 1;
-                        }
-                    } if(cp.input.up('left')) {
-                        if(this.speedX < 0)
-                        {
-                            this.speedx += 1;
-                        }
-                    } if(cp.input.up('right')) {
-                        if(this.speedX > 0)
-                        {
-                            this.speedx -= 1;
-                        }
+                // Down
+                } else if (cp.input.press('down')) {
+                	if(this.speedY < this.maxSpeed)
+                    {
+                    	this.speedY += 1;
+						console.log(this.y);
+						console.log(this.speedY);
                     }
                 }
-                
+                //if(cp.input.up('up')) {
+                //    console.log("up key released");
+                //    this.speed = 0;
+                //}
             }
 
             // Call the Player Update
@@ -243,10 +209,10 @@
 
     cp.template.RemotePlayer = cp.template.Player.extend({
     	type: 'b',
-        keyboard: false,
 
     	update: function(){
-    		//// Speed, Position is updated by the server
+    		//// Speed, Position is updated by the server, 
+    		// Super updates the position
     		this._super();
     	},
 
@@ -256,11 +222,7 @@
     		//this.x =
     		//this.y =
     		//this.angle =
-    	},
-
-        collide: function() {
-
-        }
+    	}
     });
 
 }(cp));
