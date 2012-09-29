@@ -8,7 +8,7 @@
 var SELF = null;
 
 /** @type {number} Port to run the application from */
-var PORT = 8080;
+var PORT = process.env.PORT || 5000;
 
 /** @type {object} Loads in file helper script for combining files */
 var _files = require('./compiler/helpers/files.js').files;
