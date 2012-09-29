@@ -138,6 +138,9 @@ var cp = cp || {};
 
             cp.camera.setViewport();
 
+            this.time = Date.now();
+            this.delta = this.time - (this.timeNow || this.time);
+
             // Loop through every object in storage via reverse loop for maximum performance.
             // Drawing in reverse also makes newly drawn items drawn on top instead of underneath everything
             for (var obj = 0; obj < this.storage.length; obj++) {
@@ -178,6 +181,8 @@ var cp = cp || {};
             }
 
             cp.camera.restoreViewport();
+
+            this.timeNow = this.time;
 
             // Clean out killed items
             _graveyardPurge();
