@@ -36,7 +36,6 @@
         turnRate: 0.025,
         turnLeft: false,
         turnRight: false,
-        keyboard: true,
 
         init: function (serverID) {
             if (_gameWidth === null) {
@@ -170,12 +169,12 @@
 
     	update: function(){
     		//// Update our input
-            if (window.DeviceMotionEvent && this.keyboard) {
+            if (window.DeviceMotionEvent) {
                 this.speedX = Math.round(cp.input.accel.x / 10 * -1);
                 this.speedY = Math.round(cp.input.accel.y / 10 * -1);
             } else {
-                if(this.keyboard)
-                {
+                //if(this.keyboard)
+              //  {
                     // left
                     if (cp.input.press('left')) {
                         //this.turnLeft();
@@ -210,11 +209,11 @@
                     }
                     
                     // Decay speed
+                    var zero = 0;
                     if(cp.input.up('up')) {
-                        if(this.speedY > 0)
+                        if(this.speedY > zero)
                         {
                             this.speedY -= 1;
-                            console.log("speed reduced");
                         }
                     } if(cp.input.up('down')) {
                         if(this.speedY < 0)
@@ -232,7 +231,7 @@
                             this.speedx -= 1;
                         }
                     }
-                }
+               // }
                 
             }
 
@@ -243,7 +242,6 @@
 
     cp.template.RemotePlayer = cp.template.Player.extend({
     	type: 'b',
-        keyboard: false,
 
     	update: function(){
     		//// Speed, Position is updated by the server
