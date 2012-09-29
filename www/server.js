@@ -279,7 +279,6 @@ io.sockets.on('connection', function (socket) {
 	for(id in entities) {
 		//if this is the active player
 		if(id == this.clientId) {		
-			//spawn active player 2 on players 2 screen
 			socket.emit('spawn-active-player', entities[id]);
 		} else {
 			socket.emit('spawn-remote-player', entities[id]);
@@ -297,13 +296,13 @@ io.sockets.on('connection', function (socket) {
 		io.sockets.emit('user disconnected');
   		if(socket.id == player1) {
   			console.log("player 1 disconnected");
-  			player1 = false;
   			delete entities[player1];
+  			player1 = false;
   		}
   		if(socket.id == player2) {
   			console.log("player 2 disconnected");
-  			player1 = false;
   			delete entities[player2];
+  			player1 = false;
   		}
   	});
 });
