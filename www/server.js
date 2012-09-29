@@ -237,21 +237,31 @@ io.sockets.on('connection', function (socket) {
 	socket.emit('clientlog', {msg:"sockets are socketized"});
 	
 	//if player 1 is available
-	if(!player1) {
+	if(!player1 || this.clientId == player1) {
 		console.log("player 1 connected");
 		player1 = this.clientId;
 		
+		// spawn player 1 on player 1 screen
 		socket.emit('spawn-active-player', {id:this.clientId});
 		
+		//spawn player 1 on other screens
+  		socket.broadcast.emit('spawn-remote-player', {id:this.clientId});
+		
 	//else if player 2 is available
-	} else if (!player2) {
+	} else if (!player2 || this.clientId == player2) {
 		console.log("player 2 connected");
 		player2 = socket.id;
 		
+		//spawn active player 2 on players 2 screen
 		socket.emit('spawn-active-player', {id:this.clientId});
 		
-		socket.emit('spawn-remote-player', {id: player1});
-		
+  		//spawn player 2 on others screens
+  		socket.broadcast.emit('spawn-remote-player', {id: this.clientId});
+  		
+  		if(player1) {
+  			//spawn player 1 on player 2 screen
+  			socket.broadcast.emit('spawn-remote-player', {id: player1});
+  		}
 	//otherwise they are just a viewer
 	} else {
 		console.log("viewer connected");
@@ -268,9 +278,13 @@ io.sockets.on('connection', function (socket) {
 	/* when a client disconnects */
   	socket.on('disconnect', function () {
 		io.sockets.emit('user disconnected');
-  		if(this.playerid) {
-  			console.log("player disconnected");
-  			console.log(this.playerid);
+  		if(socket.id == player1) {
+  			console.log("player 1 disconnected");
+  			player1 = false;
+  		}
+  		if(socket.id == player2) {
+  			console.log("player 2 disconnected");
+  			player1 = false;
   		}
   	});
 });
