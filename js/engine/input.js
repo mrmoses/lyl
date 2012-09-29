@@ -38,6 +38,15 @@ var cp = cp || {};
         cp.input.mouse.y = null;
     },
 
+    // Acceleromenter logic
+    _accel = function (e) {
+        console.log('im running');
+        cp.input.accel.alpha = e.alpha;
+        cp.input.accel.beta = e.beta;
+        cp.input.accel.gamma = e.gamma;
+        cp.input.accel.abs = e.absolute;
+    },
+
     // Marks the current key for deletion
     _remove = function(e) {
         var key = _getKey(e);
@@ -178,10 +187,21 @@ var cp = cp || {};
     _storage = {}, // Container for storing all pressed keys
     _active = {}; // Only contains binded keys
 
+    var _orientation = function () {
+        console.log('test');
+    };
+
     cp.input = {
         mouse: {
             x: false,
             y: false
+        },
+
+        accel: {
+            gamma: null, // x-axis front-to-back
+            beta: null, // y-axis side-to-side
+            alpha: null, // z-axis
+            abs: null
         },
 
         init: function() {
@@ -194,6 +214,23 @@ var cp = cp || {};
             cp.ctx.canvas.addEventListener('mouseout', _mouseOut, true);
             cp.ctx.canvas.addEventListener('mousedown', _store, true);
             cp.ctx.canvas.addEventListener('mouseup', _remove, true);
+
+            window.addEventListener('deviceorientation', function(e) {
+                console.log('test');
+            }, false);
+//if (window.DeviceOrientationEvent) {
+//    window.addEventListener("deviceorientation", function( event ) {
+//        //alpha: rotation around z-axis
+//        var rotateDegrees = event.alpha;
+//        //gamma: left to right
+//        var leftToRight = event.gamma;
+//        //beta: front back motion
+//        var frontToBack = event.beta;
+//                  
+//        handleOrientationEvent( frontToBack, leftToRight, rotateDegrees );
+//
+//    }, false);
+//}
         },
 
         // TODO: This loop could be better optimized, verify down, press, and up all fire in order
