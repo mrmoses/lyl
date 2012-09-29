@@ -37,17 +37,16 @@
         turnLeft: false,
         turnRight: false,
 
-        init: function (serverID) {
+        init: function (serverID, x, y) {
             if (_gameWidth === null) {
                 _gameWidth = cp.core.canvasWidth;
             }
             if (_gameHeight  === null) {
                 _gameHeight = cp.core.canvasHeight;
             }
-
-            // Center the player by default
-            this.x = (_gameWidth / 2) - (this.width / 2);
-            this.y = (_gameHeight / 2) - (this.height / 2);
+            
+            this.x = x
+            this.y = y;
 
             // Set boundaries
             this.boundaryRight = _gameWidth - this.width;
