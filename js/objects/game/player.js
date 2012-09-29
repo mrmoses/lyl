@@ -124,7 +124,6 @@
                     }
                 }
 
-
                 // update our position based on our angle and speed
                 this.x = this.x + this.speed * Math.cos(this.angle);
                 this.y = this.y + this.speed * Math.sin(this.angle);
@@ -150,7 +149,7 @@
 			if(this.y < 5) {
 				this.y = 5;
 			}
-            
+
             if(this.speed) {
 	    		socket.emit('entity-server-update', { id: this.id, x: this.x, y: this.y} );
             }
@@ -169,12 +168,20 @@
 		},
 
         collide: function (obj) {
-            // Who hit who?
-            if (_private.calcMag(this) > _private.calcMag(obj)) {
-                console.log('enemy smash');
+
+            if (obj.name === 'player') {
+                // Who hit who?
+                if (_private.calcMag(this) > _private.calcMag(obj)) {
+                    console.log('enemy smash');
+                } else {
+                    console.log('player smash');
+                }
+
+            // Must be a powerup
             } else {
-                console.log('player smash');
+
             }
+
 
             //this.deathCount += 1;
         },

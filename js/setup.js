@@ -5,18 +5,12 @@
 
     // List of scripts to load relative to js/objects
     cp.load.loadFiles = [
-        'game/player'
+        'game/player',
+        'game/level'
     ];
 
     // Width, height, and game run logic
     cp.core.init(1024, 768, function () {
-        // Keyboard key configuration
-        cp.input.bind('arrowUp', 'up');
-        cp.input.bind('arrowDown', 'down');
-        cp.input.bind('arrowLeft', 'left');
-        cp.input.bind('arrowRight', 'right');
-
-        cp.game.spawn('Player');
-        cp.game.spawn('RemotePlayer');
+        cp.game.spawn('Level');
     });
 }(cp));
