@@ -17,6 +17,8 @@
         }
     };
 
+    var _enemy = null;
+
     cp.template.Player = cp.template.Entity.extend({
     	type: 'a',
         name: 'player', // Do not remove, used for search functionality elsewhere
@@ -92,17 +94,11 @@
         update: function () {
             //this._super();
 
-            //console.log(Math.round(cp.input.accel.x / 120));
-
-
-            //// update our position based on our speed
+            // update our position based on our speed
             this.x = this.x + this.speedX; // times delta time, times momentum
             this.y = this.y + this.speedY; // times delta time, times momentum
-            //this.x = this.x + this.speed * Math.cos(this.angle);
-            //this.y = this.y + this.speed * Math.sin(this.angle);
-            //console.log(cp.input.accel.alpha);
 
-			//// Determine boundary collisions
+			// Determine boundary collisions
 			//if hitting east side
 			if(this.x > this.boundaryRight - 5) {
 				this.x = this.boundaryRight - 5;
@@ -189,7 +185,7 @@
                         {
                             this.speedX += 1;
                         }
-    
+
                     // Up
                     } else if (cp.input.press('up')) {
                         /* use accelleration */
@@ -199,7 +195,7 @@
                         {
                             this.speedY -= 1;
                         }
-                        
+
                     // Down
                     } else if (cp.input.press('down')) {
                         if(this.speedY < this.maxSpeed)
@@ -207,7 +203,7 @@
                             this.speedY += 1;
                         }
                     }
-                    
+
                     // Decay speed
                     var zero = 0;
                     if(cp.input.up('up')) {
@@ -232,7 +228,7 @@
                         }
                     }
                // }
-                
+
             }
 
             // Call the Player Update
@@ -242,6 +238,11 @@
 
     cp.template.RemotePlayer = cp.template.Player.extend({
     	type: 'b',
+
+        init: function () {
+            _enemy =
+            this._super();
+        },
 
     	update: function(){
     		//// Speed, Position is updated by the server
