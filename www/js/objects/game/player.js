@@ -38,23 +38,25 @@
 
 
         init: function (serverID) {
-            if (_gameWidth === null) {
-                _gameWidth = cp.core.canvasWidth;
+            if (this.keyboard) {
+                if (_gameWidth === null) {
+                    _gameWidth = cp.core.canvasWidth;
+                }
+                if (_gameHeight  === null) {
+                    _gameHeight = cp.core.canvasHeight;
+                }
+
+                // Center the player by default
+                this.x = (_gameWidth / 2) - (this.width / 2);
+                this.y = (_gameHeight / 2) - (this.height / 2);
+
+                // Set boundaries
+                this.boundaryRight = _gameWidth - this.width;
+                this.boundaryBottom = _gameHeight - this.height;
+
+                // Set ID
+                this.id = serverID;
             }
-            if (_gameHeight  === null) {
-                _gameHeight = cp.core.canvasHeight;
-            }
-
-            // Center the player by default
-            this.x = (_gameWidth / 2) - (this.width / 2);
-            this.y = (_gameHeight / 2) - (this.height / 2);
-
-            // Set boundaries
-            this.boundaryRight = _gameWidth - this.width;
-            this.boundaryBottom = _gameHeight - this.height;
-
-            // Set ID
-            this.id = serverID;
         },
 
         draw: function() {
@@ -168,7 +170,6 @@
 		},
 
         collide: function (obj) {
-
             if (obj.name === 'player') {
                 // Who hit who?
                 if (_private.calcMag(this) > _private.calcMag(obj)) {
@@ -181,7 +182,6 @@
             } else {
 
             }
-
 
             //this.deathCount += 1;
         },
