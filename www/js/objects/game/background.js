@@ -9,7 +9,6 @@
     cp.template.Background = cp.template.Entity.extend({
         index: 10,
         init: function () {
-            console.log('background');
             var animSheet = new cp.animate.sheet('background.png', 1024, 768);
             this.animStill = new cp.animate.cycle(animSheet, 1, [0]);
             this.animSet = this.animStill;
