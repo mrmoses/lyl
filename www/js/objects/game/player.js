@@ -110,18 +110,26 @@
         /**
          * @todo The keyboard input for directions really needs to be optimized
          */
-        update: function () {
-            
-            // Calculate Magnitude
-            
-            this.angle += cp.core.delta * 0.3;
+        update: function () {        	
+        	var speedXAbs = (this.speedX > 0) ? this.speedX : this.speedX * -1;
+        	var speedYAbs = (this.speedY > 0) ? this.speedY : this.speedY * -1;
+        	var speedAbs =  speedXAbs + speedYAbs;
+        	if(speedAbs == 0) {
+        		this.angle = 0;
+        	} else if (speedAbs < 6) {
+            	this.angle += cp.core.delta * 0.1;
+        	} else if (speedAbs < 10) {
+            	this.angle += cp.core.delta * 0.2;
+        	} else {
+            	this.angle += cp.core.delta * 0.3;	
+        	}
 
             if (this.angle > 360) {
                 this.angle -= 360;
             }
 
             this._super();
-
+            
             // update our position based on our speed
             this.x = cp.math.round(this.x + this.speedX * (cp.core.delta * _deltaSlow)); // times momentum
             this.y = cp.math.round(this.y + this.speedY * (cp.core.delta * _deltaSlow)); // times momentum
@@ -305,22 +313,18 @@
 			if(this.socketDelayCount) {
 				if(this.socketDelayCount % 2){
 					var data = {
-		    			id: this.id
+		    			id: this.id,
+		    			x: this.x,
+		    			y: this.y,
+		    			speedX: this.speedX,
+		    			speedY: this.speedY
 					};
-					if(this.socketDelayCount % 3) {
-						data.speedX = this.speedX;
-						data.speedY = this.speedY;
-					} else {
-						data.x = this.x;
-						data.y = this.y;
-					}
 					
 		    		socket.emit('entity-server-update', data);
 				}
 	    		
 				this.socketDelayCount--;
 			} else {
-				console.log("sending nothing");
 				this.socketDelayCount = this.socketDelay;
 			}
 
