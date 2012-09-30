@@ -110,7 +110,17 @@
         /**
          * @todo The keyboard input for directions really needs to be optimized
          */
-        update: function () {        	
+        update: function () {
+            
+            if(this.collided == true)
+            {
+                this.collisionTimer = this.collisionTimer - cp.core.delta;
+                if(this.collisionTimer <= 0) {
+                    this.collided = false;
+                    this.collisionTimer = 0;
+                }
+            }
+                    	
         	var speedXAbs = (this.speedX > 0) ? this.speedX : this.speedX * -1;
         	var speedYAbs = (this.speedY > 0) ? this.speedY : this.speedY * -1;
         	var speedAbs =  speedXAbs + speedYAbs;
@@ -176,59 +186,33 @@
                     // Who hit who?
                     if (_private.calcMag(this) > _private.calcMag(obj)) {
                         console.log('enemy smash');
-                        this.mass -= .05;
-                        this.playerSize -= .05;
-                        obj.mass += .05;  
+                        this.mass -= .25;
+                        this.playerSize -= .1;
+                        obj.mass += .25;  
                         obj.playerSize += 1;
                         
-                        this.speedX = -1 * this.mass * .5 * obj.speedX;
-                        this.speedY = -1 * this.mass * .5 * obj.speedY;
-                        obj.speedX = -1 * obj.mass * 1.5 * this.speedX;
-                        obj.speedY = -1 * obj.mass * 1.5 * this.speedY;
+                        this.speedX = -1 * obj.mass * .5 * this.speedX;
+                        this.speedY = -1 * obj.mass * .5 * this.speedY;
+                        obj.speedX = -1 * this.mass * 1.5 * obj.speedX;
+                        obj.speedY = -1 * this.mass * 1.5 * obj.speedY;
                         
-                        /*
-                        this.speedY = cp.math.roud(2*obj.mass* obj.mass + this.speedY(this.mass - obj.mass)) / (this.mass + obj.mass);
-                        this.speedX = cp.math.roud(2*obj.mass* obj.mass + this.speedX(this.mass - obj.mass)) / (this.mass + obj.mass);
-                        obj.speedY = cp.math.roud(2*this.mass* this.mass + obj.speedY(obj.mass - this.mass)) / (this.mass + obj.mass);
-                        obj.speedX = cp.math.roud(2*this.mass* this.mass + obj.speedX(obj.mass - this.mass)) / (this.mass + obj.mass);
-                        */
-                        /*
-                        // Set our speeds and their speeds  
-                        this.speedY = cp.math.round((-1 * obj.speedX * obj.mass)/this.mass);
-                        this.speedX = cp.math.round((-1 * obj.speedY * obj.mass)/this.mass);                
-                        obj.speedY = cp.math.round((this.mass * this.speedY)/obj.mass);
-                        obj.speedX = cp.math.round((this.mass * this.speedX)/obj.mass);
-                        */
                         cp.game.spawn('LemmingExplosion', this.x, this.y);
 
                     } else {
                         console.log('player smash');
                         // Transfer Mass
-                        this.mass += .05;
+                        this.mass += .25;
                         this.playerSize += 1;
-                        obj.mass -= .05;
+                        obj.mass -= .25;
                         obj.playerSize -= 1;
                         
-                        obj.speedX = -1 * obj.mass * .5 * this.speedX;
-                        obj.speedY = -1 * obj.mass * .5 * this.speedY;                        
-                        this.speedX = -1 * this.mass * 1.5 * obj.speedX;
-                        this.speedY = -1 * this.mass * 1.5 * obj.speedY;
-                        /*
-                        // Set our speeds and their speeds           
-                        obj.speedY = cp.math.round((-1 * this.mass * this.speedY)/obj.mass);
-                        obj.speedX = cp.math.round((-1 * this.mass * this.speedX)/obj.mass);                  
-                        this.speedY = cp.math.round((obj.speedX * obj.mass)/this.mass);
-                        this.speedX = cp.math.round((obj.speedY * obj.mass)/this.mass); 
-                        */
+                        obj.speedX = -1 * this.mass * .5 * obj.speedX * .5;
+                        obj.speedY = -1 * this.mass * .5 * obj.speedY * .5;
+                        this.speedX = -1 * obj.mass * 1.5 * this.speedX *.5;
+                        this.speedY = -1 * obj.mass * 1.5 * this.speedY *.5;
+
                         cp.game.spawn('LemmingExplosion', obj.x, obj.y);
-                    }
-                    
-                    /*
-                    this.speedY = cp.math.roud(2*obj.mass* obj.mass + this.speedY(this.mass - obj.mass)) / (this.mass + obj.mass);
-                    this.speedX = cp.math.roud(2*obj.mass* obj.mass + this.speedX(this.mass - obj.mass)) / (this.mass + obj.mass);
-                    obj.speedY = cp.math.roud(2*this.mass* this.mass + obj.speedY(obj.mass - this.mass)) / (this.mass + obj.mass);
-                    obj.speedX = cp.math.roud(2*this.mass* this.mass + obj.speedX(obj.mass - this.mass)) / (this.mass + obj.mass);
-                    */  
+                    } 
                     
                     obj.x = cp.math.round(obj.x + obj.speedX * (cp.core.delta * _deltaSlow));
                     obj.y = cp.math.round(obj.y + obj.speedY * (cp.core.delta * _deltaSlow));
@@ -256,14 +240,7 @@
 
     	update: function(){
     	    // Update timers
-    	    if(this.collided == true)
-    	    {
-                this.collisionTimer = this.collisionTimer - cp.core.delta;
-                if(this.collisionTimer <= 0) {
-                    this.collided = false;
-                    this.collisionTimer = 0;
-                }
-    	    }
+
 
     		//// Update our input
             if (window.DeviceMotionEvent) {
@@ -310,8 +287,8 @@
             }
 
 
-			if(this.socketDelayCount) {
-				if(this.socketDelayCount % 2){
+			/*if(this.socketDelayCount) {
+				if(this.socketDelayCount % 2){*/
 					var data = {
 		    			id: this.id,
 		    			x: this.x,
@@ -321,12 +298,12 @@
 					};
 					
 		    		socket.emit('entity-server-update', data);
-				}
+				/*}
 	    		
 				this.socketDelayCount--;
 			} else {
 				this.socketDelayCount = this.socketDelay;
-			}
+			}*/
 
             // Call the Player Update
             this._super();
@@ -341,14 +318,6 @@
             //collisionTimer = collisionTimer - cp.core.delta;
     		//// Speed, Position is updated by the server
     		this._super();
-    	},
-
-    	updateStats: function(){
-    		// Updates speed, position, etc
-    		//this.speed = whateverFromServer;
-    		//this.x =
-    		//this.y =
-    		//this.angle =
     	},
 
         collide: function() {
