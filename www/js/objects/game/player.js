@@ -156,30 +156,32 @@
                     // Who hit who?
                     if (_private.calcMag(this) > _private.calcMag(obj)) {
                         console.log('enemy smash');
-                        this.mass -= .25;
-                        this.playerSize -= .1;
-                        obj.mass += .25;
+                        this.mass -= 0.25;
+                        this.playerSize -= 1;
+                        obj.mass += 0.25;
                         obj.playerSize += 1;
 
-                        this.speedX = -1 * obj.mass * .5 * this.speedX;
-                        this.speedY = -1 * obj.mass * .5 * this.speedY;
-                        obj.speedX = -1 * this.mass * 1.5 * obj.speedX;
-                        obj.speedY = -1 * this.mass * 1.5 * obj.speedY;
+                        this.speedX = -1 * obj.mass * 0.5 * this.speedX * 0.5;
+                        this.speedY = -1 * obj.mass * 0.5 * this.speedY * 0.5;
+                        obj.speedX = -1 * this.mass * 1.25 * obj.speedX * 0.5;
+                        obj.speedY = -1 * this.mass * 1.25 * obj.speedY * 0.5;
 
                         cp.game.spawn('LemmingExplosion', this.x, this.y);
+
+
 
                     } else {
                         console.log('player smash');
                         // Transfer Mass
-                        this.mass += .25;
+                        this.mass += 0.25;
                         this.playerSize += 1;
-                        obj.mass -= .25;
+                        obj.mass -= 0.25;
                         obj.playerSize -= 1;
 
-                        obj.speedX = -1 * this.mass * .5 * obj.speedX * .5;
-                        obj.speedY = -1 * this.mass * .5 * obj.speedY * .5;
-                        this.speedX = -1 * obj.mass * 1.5 * this.speedX *.5;
-                        this.speedY = -1 * obj.mass * 1.5 * this.speedY *.5;
+                        obj.speedX = -1 * this.mass * 0.5 * obj.speedX * 0.5;
+                        obj.speedY = -1 * this.mass * 0.5 * obj.speedY * 0.5;
+                        this.speedX = -1 * obj.mass * 1.25 * this.speedX * 0.5;
+                        this.speedY = -1 * obj.mass * 1.25 * this.speedY * 0.5;
 
                         cp.game.spawn('LemmingExplosion', obj.x, obj.y);
                     }
@@ -188,6 +190,20 @@
                     obj.y = cp.math.round(obj.y + obj.speedY * (cp.core.delta * _deltaSlow));
                     this.x = cp.math.round(this.x + this.speedX * (cp.core.delta * _deltaSlow));
                     this.y = cp.math.round(this.y + this.speedY * (cp.core.delta * _deltaSlow));
+
+                    //////////
+                    // MAYBE put packet sending here
+                    // Send a packet that updates objs data
+                    var data = {
+                        id: obj.id,
+                        x: obj.x,
+                        y: obj.y,
+                        speedX: obj.speedX,
+                        speedY: obj.speedY,
+                        collision: true
+                    };
+
+                    socket.emit('entity-server-update', data);
                 }
             }
         },
@@ -213,7 +229,7 @@
 
 
     		//// Update our input
-            if (window.DeviceMotionEvent) {
+            if (window.DeviceMotionEvent && !this.collided) {
                 this.speedX = Math.round(cp.input.accel.x / 10 * -1);
                 this.speedY = Math.round(cp.input.accel.y / 10 * -1);
             } else {
