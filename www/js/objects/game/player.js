@@ -19,6 +19,12 @@
     var _minHP = 3;
 
     var _maxHP = 17;
+    var _gameOver = {
+        xMin: 453,
+        xMax: 553,
+        yMin: 336,
+        yMax: 436,
+    }
 
     var _private = {
         calcMag: function (obj) {
@@ -32,9 +38,26 @@
                 obj.hp = _maxHP;
             } else if (obj.hp < _minHP) {
                 obj.hp = _minHP;
+                canWin = true;
             } else {
+                canWin = false;
                 obj.width = obj.height = (obj.hp / _defHP) * _defSize;
             }
+        },
+
+        checkMiddle: function (obj) {
+            if(canWin){
+                if(this.x < _gameOver.Xmax && this.x > _gameOver.Xmin) {
+                    if(this.y < _gameOver.Ymax && this.x > _gameOver.Ymin) {
+                        // Win Stuff
+                        // CALL ARMEGEDDON
+                        socket.emit("game-win", obj);
+                        // Play audio message
+                        cp.audio.play('oh-yeah-high');
+                    }
+                }  
+            }
+
         }
     };
 
@@ -54,21 +77,15 @@
         collisionTimer: 0,
         timerDuration: 100,
         collided: false,
+        canWin: false,
 
         speedX: 0,
         speedY: 0,
-        magnitude: 0,
         accelRate: 0.2,
         maxSpeed: 15,
         minSpeed: -15,
         decaySpeed: 10,
         hp: _defHP,
-
-        turnRate: 0.025,
-        turnLeft: false,
-        turnRight: false,
-
-        inCollision: false,
 
         init: function (serverID, x, y) {
             if (_gameWidth === null) {
@@ -154,7 +171,8 @@
             this.x = cp.math.round(this.x + this.speedX * (cp.core.delta * _deltaSlow));
             this.y = cp.math.round(this.y + this.speedY * (cp.core.delta * _deltaSlow));
 
-
+            _private.checkMiddle(this);
+                
 			// Determine boundary collisions
 			//if hitting east side
 			if(this.x > this.boundaryRight - 5) {
@@ -204,10 +222,10 @@
                         obj.mass -= 0.25;
                         obj.hp -= 1;
 
-                        obj.speedX = -1 * this.mass * 0.5 * obj.speedX * 0.5;
-                        obj.speedY = -1 * this.mass * 0.5 * obj.speedY * 0.5;
-                        this.speedX = -1 * obj.mass * 1.25 * this.speedX * 0.5;
-                        this.speedY = -1 * obj.mass * 1.25 * this.speedY * 0.5;
+                        obj.speedX = cp.math.round( -1 * this.mass * 0.5 * obj.speedX * 0.5);
+                        obj.speedY = cp.math.round( -1 * this.mass * 0.5 * obj.speedY * 0.5);
+                        this.speedX = cp.math.round( -1 * obj.mass * 1.25 * this.speedX * 0.5);
+                        this.speedY = cp.math.round( -1 * obj.mass * 1.25 * this.speedY * 0.5);
 
                         cp.game.spawn('LemmingExplosion', obj.x, obj.y);
                     }
@@ -220,20 +238,6 @@
 
                     _private.setSize(this);
                     _private.setSize(obj);
-
-                    //////////
-                    // MAYBE put packet sending here
-                    // Send a packet that updates objs data
-                    //var data = {
-                    //    id: obj.id,
-                    //    x: obj.x,
-                    //    y: obj.y,
-                    //    speedX: obj.speedX,
-                    //    speedY: obj.speedY,
-                    //    collision: true
-                    //};
-                    //
-                    //socket.emit('entity-server-update', data);
                 }
             }
         }
@@ -294,7 +298,10 @@
     			x: this.x,
     			y: this.y,
     			speedX: this.speedX,
-    			speedY: this.speedY
+    			speedY: this.speedY,
+    			//mass: this.mass,
+    			//hp: ti
+    			
 			};
 
     		socket.emit('entity-server-update', data);
