@@ -266,9 +266,9 @@
         color: '#f00',
 
         init: function () {
-            this._super();
             var animSheet = new cp.animate.sheet('ball-alt.png', 80, 80);
             this.animPlayer = new cp.animate.cycle(animSheet, 1, [0]);
+            this._super();
         },
 
         collide: function() {
