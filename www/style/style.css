@@ -94,15 +94,15 @@ body {
 }
 
 #canvas.game-won {
-	background: url(../images/end-win.jpg);
+	background: url(../images/end-win.png);
 }
 
 #canvas.game-lost {
-	background: url(../images/end-lose.jpg);
+	background: url(../images/end-lose.png);
 }
 
 #canvas.game-over {
-	background: url(../images/end-generic.jpg);
+	background: url(../images/end-generic.png);
 }
 
 body.admin {
