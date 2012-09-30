@@ -6,27 +6,6 @@
 
     var SELF = null;
 
-    //var _private = {
-    //    gameOver: function (win) {
-    //        // Delete all of the players
-    //        var players = cp.game.entityGetVal('name', 'player');
-    //        for (var i = players.length; i--;) {
-    //            players[i].kill();
-    //        }
-    //
-    //        // Play audio message
-    //        if (win) {
-    //            cp.audio.play('win');
-    //        } else if (win === false) {
-    //            cp.audio.play('loser');
-    //        } else {
-    //            cp.audio.play('oh-yeah-high');
-    //        }
-    //
-    //        // Show the correct win or lose message
-    //    }
-    //};
-
     cp.template.Level = cp.template.Entity.extend({
         name: 'level',
 

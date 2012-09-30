@@ -77,41 +77,11 @@
             this.animSet = this.animPlayer;
         },
 
-        draw: function() {
-            this._super();
-//	        cp.ctx.fillStyle = this.color;
-//	        cp.ctx.fillRect(this.x, this.y, this.width, this.height);
-//	        return;
-//
-//            //this._super();
-//
-//            cp.ctx.save(); //save the current draw state
-//
-//			//set drawing area to where the tank is
-//			cp.ctx.translate(this.x,this.y);
-//
-//			//rotate drawing area
-//			cp.ctx.rotate(this.angle);
-//
-//			//set the color to the color of the body of the tank
-//			cp.ctx.fillStyle = this.color;"rgb(255,0,255)"; //white
-//			//draw rectangle (main body)
-//	        cp.ctx.fillRect(-this.length/2,-this.width/2,this.length,this.width);
-//
-//
-//			//set color to grey
-//			cp.ctx.fillStyle = this.color;
-//			//draw rectangle (front)
-//	        cp.ctx.fillRect(0,-this.width/3,this.length/2,this.width*2/3);
-//
-//			cp.ctx.restore(); //restore the previous draw state
-        },
-
         /**
          * @todo The keyboard input for directions really needs to be optimized
          */
         update: function () {
-            
+
             if(this.collided == true)
             {
                 this.collisionTimer = this.collisionTimer - cp.core.delta;
@@ -120,7 +90,7 @@
                     this.collisionTimer = 0;
                 }
             }
-                    	
+
         	var speedXAbs = (this.speedX > 0) ? this.speedX : this.speedX * -1;
         	var speedYAbs = (this.speedY > 0) ? this.speedY : this.speedY * -1;
         	var speedAbs =  speedXAbs + speedYAbs;
@@ -131,7 +101,7 @@
         	} else if (speedAbs < 10) {
             	this.angle += cp.core.delta * 0.2;
         	} else {
-            	this.angle += cp.core.delta * 0.3;	
+            	this.angle += cp.core.delta * 0.3;
         	}
 
             if (this.angle > 360) {
@@ -139,7 +109,7 @@
             }
 
             this._super();
-            
+
             // update our position based on our speed
             this.x = cp.math.round(this.x + this.speedX * (cp.core.delta * _deltaSlow)); // times momentum
             this.y = cp.math.round(this.y + this.speedY * (cp.core.delta * _deltaSlow)); // times momentum
@@ -180,7 +150,7 @@
             if (obj.name === 'player') {
                 if(this.collided == false && obj.collided == false) {
                     this.collided = true;
-                    this.collisionTimer = this.timerDuration;  
+                    this.collisionTimer = this.timerDuration;
                     obj.collided = true;
                     obj.collisionTimer = obj.timerDuration;
                     // Who hit who?
@@ -188,14 +158,14 @@
                         console.log('enemy smash');
                         this.mass -= .25;
                         this.playerSize -= .1;
-                        obj.mass += .25;  
+                        obj.mass += .25;
                         obj.playerSize += 1;
-                        
+
                         this.speedX = -1 * obj.mass * .5 * this.speedX;
                         this.speedY = -1 * obj.mass * .5 * this.speedY;
                         obj.speedX = -1 * this.mass * 1.5 * obj.speedX;
                         obj.speedY = -1 * this.mass * 1.5 * obj.speedY;
-                        
+
                         cp.game.spawn('LemmingExplosion', this.x, this.y);
 
                     } else {
@@ -205,21 +175,21 @@
                         this.playerSize += 1;
                         obj.mass -= .25;
                         obj.playerSize -= 1;
-                        
+
                         obj.speedX = -1 * this.mass * .5 * obj.speedX * .5;
                         obj.speedY = -1 * this.mass * .5 * obj.speedY * .5;
                         this.speedX = -1 * obj.mass * 1.5 * this.speedX *.5;
                         this.speedY = -1 * obj.mass * 1.5 * this.speedY *.5;
 
                         cp.game.spawn('LemmingExplosion', obj.x, obj.y);
-                    } 
-                    
+                    }
+
                     obj.x = cp.math.round(obj.x + obj.speedX * (cp.core.delta * _deltaSlow));
                     obj.y = cp.math.round(obj.y + obj.speedY * (cp.core.delta * _deltaSlow));
                     this.x = cp.math.round(this.x + this.speedX * (cp.core.delta * _deltaSlow));
                     this.y = cp.math.round(this.y + this.speedY * (cp.core.delta * _deltaSlow));
                 }
-            }   
+            }
         },
 
         kill: function () {
@@ -234,7 +204,7 @@
 
     cp.template.ActivePlayer = cp.template.Player.extend({
     	type: 'a',
-        
+
         socketDelay: 6,
         socketDelayCount: 6,
 
@@ -296,10 +266,10 @@
 		    			speedX: this.speedX,
 		    			speedY: this.speedY
 					};
-					
+
 		    		socket.emit('entity-server-update', data);
 				/*}
-	    		
+
 				this.socketDelayCount--;
 			} else {
 				this.socketDelayCount = this.socketDelay;
@@ -314,11 +284,11 @@
     	type: 'b',
         color: '#f00',
 
-    	update: function(){
-            //collisionTimer = collisionTimer - cp.core.delta;
-    		//// Speed, Position is updated by the server
-    		this._super();
-    	},
+        init: function () {
+            this._super();
+            var animSheet = new cp.animate.sheet('ball-alt.png', 80, 80);
+            this.animPlayer = new cp.animate.cycle(animSheet, 1, [0]);
+        },
 
         collide: function() {
 
