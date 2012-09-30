@@ -51,7 +51,6 @@
                 if(obj.x < _gameOver.xMax && obj.x > _gameOver.xMin) {
                     if(obj.y < _gameOver.yMax && obj.x > _gameOver.yMin) {
                         // Win Stuff
-                        // CALL ARMEGEDDON
                         socket.emit("game-win", {id:obj.id});
                         // Play audio message
                         cp.audio.play('oh-yeah-high');
@@ -202,7 +201,6 @@
                     obj.collisionTimer = obj.timerDuration;
                     // Who hit who?
                     if (_private.calcMag(this) > _private.calcMag(obj)) {
-                        console.log('enemy smash');
                         this.mass -= 0.25;
                         this.hp -= 1;
                         obj.mass += 0.25;
@@ -216,7 +214,6 @@
                         cp.game.spawn('LemmingExplosion', this.x, this.y);
                         socket.emit('lemmingexplosion', {x:this.x, y:this.y});
                     } else {
-                        console.log('player smash');
                         // Transfer Mass
                         this.mass += 0.25;
                         this.hp += 1;
