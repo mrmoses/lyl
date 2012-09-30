@@ -7,6 +7,8 @@
 
     /** @type {number} Cached reference of game's play area */
     var _gameHeight = null;
+    
+    var _intendedFPS = 10;
 
     var _playerSize = 10;
     
@@ -99,8 +101,8 @@
             //this._super();
 
             // update our position based on our speed
-            this.x = this.x + this.speedX;// * cp.core.delta* 1000 ); // times momentum
-            this.y = this.y + this.speedY;// * cp.core.delta* 1000 ); // times momentum
+            this.x = this.x + this.speedX * (cp.core.delta * _intendedFPS); // times momentum
+            this.y = this.y + this.speedY * (cp.core.delta * _intendedFPS); // times momentum
 
 
 			// Determine boundary collisions
@@ -146,14 +148,14 @@
                 } else {
                     console.log('player smash');
                 }
-/*
+
                 obj.speedY *= -1;
                 obj.speedX *= -1;
-                obj.x = obj.x + obj.speedX * cp.core.delta * (1 / obj.decaySpeed); // times momentum
-                obj.y = obj.y + obj.speedY * cp.core.delta * (1 / obj.decaySpeed); // times momentum            
-                this.x = this.x + this.speedX * cp.core.delta * (1 / this.decaySpeed); // times momentum
-                this.y = this.y + this.speedY * cp.core.delta * (1 / this.decaySpeed); // times momentum
-*/
+                obj.x = obj.x + obj.speedX * (cp.core.delta * _intendedFPS); // times momentum
+                obj.y = obj.y + obj.speedY * (cp.core.delta * _intendedFPS); // times momentum            
+                this.x = this.x + this.speedX * (cp.core.delta * _intendedFPS); // times momentum
+                this.y = this.y + this.speedY * (cp.core.delta * _intendedFPS); // times momentum
+ 
 
             // Must be a powerup
             } else {
