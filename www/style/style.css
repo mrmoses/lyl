@@ -89,8 +89,30 @@ body {
     z-index: 1;
 }
 
-#canvas.armageddon {
-	background: url(../images/armageddon.jpg);
+#canvas.lemmegeddon {
+	background: url(../images/lemmegeddon.jpg);
+}
+
+body.admin {
+	margin: 10px;
+}
+
+body.admin #container {
+	position: relative;
+	width: 1024px;
+	height: 568px;
+	margin: 0 auto;
+	text-align:inherit;
+}
+
+body.admin #sockets {
+	position: absolute;
+	right: 0;
+}
+
+body.admin #msgs {
+	position:absolute;
+	bottom:0;
 }
 
 /* Debug - Nav */

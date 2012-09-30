@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title>LYL Admin</title>
+    <link rel="stylesheet" type="text/css" href="style/style.css" media="all" />
+    <meta name="apple-touch-fullscreen" content="yes" />
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="/images/big-lemming-icon.png">
+    <!-- Favicon For everything else -->
+    <link rel="shortcut icon" href="favicon.ico">
+
+    <!-- iOS -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="apple-touch-startup-image" href="/images/icon.png">
+
+    <meta name="viewport" content="width=device-width, maximum-scale=1.0, user-scalable=no">
+</head>
+
+<body class="admin">
+    <div id="container">
+    	<div id="admin-links">
+    		<a id="lemmegeddon" href="#">Lemmegeddon!</a>
+    	</div>
+		<ul id="msgs">
+			<li><h2>Logs</h2></li>
+		</ul>
+		<ul id="sockets">
+			<li><h2>Users</h2></li>
+		</ul>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+	<script type="text/javascript">
+		console.log("socketizing sockets");
+		var socket = io.connect();
+		
+		socket.on('connect',function() {
+		  $("#msgs").append($("<li />").html("you are " + socket.socket.sessionid));
+			socket.emit("admin-connect", {}, function(data) {
+				for(id in data) {
+					addClient(id);
+				}
+			});
+		});
+		  
+		socket.on('clientlog',function(data) {
+		  console.log(data.msg);
+		});
+		  
+		socket.on('adminlog',function(data) {
+			$("#msgs").append($("<li />").html(data.msg));
+		});
+		  
+		socket.on('admin-new-socket',function(data) {
+			addClient(data.id);
+		});
+			
+		socket.on('admin-closed-socket', function(data) {
+			$("#" + data.id).remove();
+		});
+		
+		$(function() {
+			$("#lemmegeddon").click(function() {
+				socket.emit("lemmegeddon");
+			});
+			
+			$("#sockets").delegate(".disconnect", "click", function() {
+				socket.emit("admin-close", {id: $(this).data("id")});
+			})
+		});
+		
+		function addClient(id) {
+			$("#sockets").append(
+				$('<li />').attr("id",id).append(
+					$('<span />').html(id + " - ")).append(
+					$('<a />')
+						.attr("href","#")
+						.attr("class","disconnect")
+						.data("id", id)
+						.html("disconnect")
+				)
+			);
+		}
+	</script>
+</body>
+
+</html>

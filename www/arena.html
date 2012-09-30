@@ -22,6 +22,7 @@
     	<canvas id="canvas">
             Download Google Chrome to play this game now!
         </canvas>
+        <div id="client-id" style="position: absolute; bottom: -40px; z-index: 1; left: 10px;" />
     </div>
 
     <!-- COMPILER_REPLACE -->
@@ -36,6 +37,18 @@
 	<script type="text/javascript">
 		console.log("socketizing sockets");
 	  var socket = io.connect();
+	  
+	  socket.on('connect',function() {
+	  	var el = document.getElementById('client-id');
+	  	el.innerText = socket.socket.sessionid;
+	  	socket.emit('user-connect', {id:socket.socket.sessionid});
+	  });
+	  
+	  socket.on('disconnect',function() {
+	  	console.log("disconnected",socket.socket.sessionid);
+	  	var entity = cp.game.entityGetVal('id',socket.socket.sessionid)[0];
+	  	entity.kill();
+	  });
 	  
 	  socket.on('clientlog',function(data) {
 	    console.log(data.msg);
@@ -55,16 +68,14 @@
 	  
 	  socket.on('entity-client-update', function(data) {
 	  	var entity = cp.game.entityGetVal('id',data.id)[0];
-	  	console.log('update entity', entity, data);
 	  	for(var prop in data) {
-	  		console.log("updating entity", prop, entity[prop], data[prop])
 	  		entity[prop] = data[prop];
 	  	}
 	  });
 	  
-	  socket.on('armageddon', function(data) {
+	  socket.on('lemmegeddon', function(data) {
 	  	var el = document.getElementById('canvas');
-	  	el.classList.add('armageddon');
+	  	el.classList.add('lemmegeddon');
 	  	socket.disconnect();
 	  });
 	  
