@@ -93,6 +93,18 @@ body {
 	background: url(../images/lemmegeddon.jpg);
 }
 
+#canvas.game-won {
+	background: url(../images/end-win.jpg);
+}
+
+#canvas.game-lost {
+	background: url(../images/end-lose.jpg);
+}
+
+#canvas.game-over {
+	background: url(../images/end-generic.jpg);
+}
+
 body.admin {
 	margin: 10px;
 }
