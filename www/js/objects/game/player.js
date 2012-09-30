@@ -17,7 +17,11 @@
     var _private = {
         calcMag: function (obj) {
             var speedCalc = obj.speedX * obj.speedX + obj.speedY * obj.speedY;
-            return Math.sqrt(speedCalc);
+            speedCalc = Math.sqrt(speedCalc);
+            return cp.math.round(speedCalc);
+        },
+        calcMom: function (obj) {
+            var momentum = this.calcMag(obj) * obj.mass;
         }
     };
 
@@ -160,8 +164,12 @@
                 // Who hit who?
                 if (_private.calcMag(this) > _private.calcMag(obj)) {
                     console.log('enemy smash');
+                    this.mass -= .05;
+                    obj.mass += .05;
                     cp.game.spawn('LemmingExplosion', this.x, this.y);
                 } else {
+                    this.ass += .05;
+                    Object.mass -= .05;
                     console.log('player smash');
                     cp.game.spawn('LemmingExplosion', obj.x, obj.y);
                 }
@@ -170,10 +178,10 @@
                 {
                     this.collided = true;
                     this.collisionTimer = 100;
-                    obj.speedY *= -obj.mass;
-                    obj.speedX *= -obj.mass;
-                    this.speedY *= -this.mass;
-                    this.speedX *= -this.mass;
+                    obj.speedY *= -this.mass;
+                    obj.speedX *= -this.mass;
+                    this.speedY *= -obj.mass;
+                    this.speedX *= -obj.mass;
                     obj.x = obj.x + obj.speedX * (cp.core.delta * _deltaSlow); // times momentum
                     obj.y = obj.y + obj.speedY * (cp.core.delta * _deltaSlow); // times momentum
                     this.x = this.x + this.speedX * (cp.core.delta * _deltaSlow); // times momentum
