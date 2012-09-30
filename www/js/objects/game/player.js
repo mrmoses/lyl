@@ -8,7 +8,7 @@
     /** @type {number} Cached reference of game's play area */
     var _gameHeight = null;
     
-    var _intendedFPS = 10;
+    var _deltaSlow = 1/30;
 
     var _playerSize = 10;
     
@@ -101,8 +101,8 @@
             //this._super();
 
             // update our position based on our speed
-            this.x = this.x + this.speedX * (cp.core.delta * _intendedFPS); // times momentum
-            this.y = this.y + this.speedY * (cp.core.delta * _intendedFPS); // times momentum
+            this.x = this.x + this.speedX * (cp.core.delta * _deltaSlow); // times momentum
+            this.y = this.y + this.speedY * (cp.core.delta * _deltaSlow); // times momentum
 
 
 			// Determine boundary collisions
@@ -151,10 +151,10 @@
 
                 obj.speedY *= -1;
                 obj.speedX *= -1;
-                obj.x = obj.x + obj.speedX * (cp.core.delta * _intendedFPS); // times momentum
-                obj.y = obj.y + obj.speedY * (cp.core.delta * _intendedFPS); // times momentum            
-                this.x = this.x + this.speedX * (cp.core.delta * _intendedFPS); // times momentum
-                this.y = this.y + this.speedY * (cp.core.delta * _intendedFPS); // times momentum
+                obj.x = obj.x + obj.speedX * (cp.core.delta * _deltaSlow); // times momentum
+                obj.y = obj.y + obj.speedY * (cp.core.delta * _deltaSlow); // times momentum            
+                this.x = this.x + this.speedX * (cp.core.delta * _deltaSlow); // times momentum
+                this.y = this.y + this.speedY * (cp.core.delta * _deltaSlow); // times momentum
  
 
             // Must be a powerup
