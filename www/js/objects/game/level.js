@@ -21,6 +21,7 @@
 
                     cp.audio.newSound('loser');
                     cp.audio.newSound('oh-yeah-high');
+                    cp.audio.newSound('collide', 5);
                 }
             }
         },

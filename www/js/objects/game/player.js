@@ -246,7 +246,7 @@
                     }
                 }
             }
- 
+
 			var data = {
     			id: this.id,
     			x: this.x,
@@ -256,7 +256,7 @@
 			};
 
     		socket.emit('entity-server-update', data);
-    		
+
             this._super();
     	}
     });
@@ -268,12 +268,11 @@
         init: function (serverID, x, y) {
             this._super(serverID, x, y);
             var animSheet = new cp.animate.sheet('ball-alt.png', 80, 80);
-            this.animPlayer = new cp.animate.cycle(animSheet, 1, [0]);
+            this.animEnemy = new cp.animate.cycle(animSheet, 1, [0]);
+            this.animSet = this.animEnemy;
         },
 
-        collide: function() {
-
-        }
+        collide: function() {}
     });
 
 }(cp));
