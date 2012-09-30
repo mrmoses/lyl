@@ -1,7 +1,7 @@
 (function (cp) {
     // Debugging tools
-    cp.debug.active = true;
-    cp.debug.showCollisions = true;
+    //cp.debug.active = true;
+    //cp.debug.showCollisions = true;
 
     // List of scripts to load relative to js/objects
     cp.load.loadFiles = [
