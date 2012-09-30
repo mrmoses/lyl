@@ -15,7 +15,9 @@
             this.y = y;
         },
 
-    	update: function () {},
+    	update: function () {
+            return;
+        },
 
         draw: function () {
             console.log(this.x, this.y);
