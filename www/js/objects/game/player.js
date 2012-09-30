@@ -265,8 +265,8 @@
     	type: 'b',
         color: '#f00',
 
-        init: function () {
-            this._super();
+        init: function (serverID, x, y) {
+            this._super(serverID, x, y);
             var animSheet = new cp.animate.sheet('ball-alt.png', 80, 80);
             this.animPlayer = new cp.animate.cycle(animSheet, 1, [0]);
         },
