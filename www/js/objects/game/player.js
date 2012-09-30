@@ -141,10 +141,6 @@
 			if(this.y < 5) {
 				this.y = 5;
 			}
-
-            if(this.speedX || this.speedY) {
-	    		socket.emit('entity-server-update', { id: this.id, x: this.x, y: this.y} );
-            }
         },
 
 		turnLeft: function() {
@@ -209,6 +205,9 @@
 
     cp.template.ActivePlayer = cp.template.Player.extend({
     	type: 'a',
+        
+        socketDelay: 6,
+        socketDelayCount: 6,
 
     	update: function(){
     	    // Update timers
@@ -264,6 +263,28 @@
                     }
                 }
             }
+
+			if(this.socketDelayCount) {
+				if(this.socketDelayCount % 2){
+					var data = {
+		    			id: this.id
+					};
+					if(this.socketDelayCount % 3) {
+						data.speedX = this.speedX;
+						data.speedY = this.speedY;
+					} else {
+						data.x = this.x;
+						data.y = this.y;
+					}
+					
+		    		socket.emit('entity-server-update', data);
+				}
+	    		
+				this.socketDelayCount--;
+			} else {
+				console.log("sending nothing");
+				this.socketDelayCount = this.socketDelay;
+			}
 
             // Call the Player Update
             this._super();
