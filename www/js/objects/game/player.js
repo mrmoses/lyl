@@ -33,6 +33,9 @@
 
         angle: 0,
 
+        collisionTimer: 0,
+        collided: false,
+
         speedX: 0,
         speedY: 0,
         accelRate: 0.2,
@@ -104,7 +107,7 @@
             this.x = this.x + this.speedX * (cp.core.delta * _deltaSlow); // times momentum
             this.y = this.y + this.speedY * (cp.core.delta * _deltaSlow); // times momentum
 
-
+            
 			// Determine boundary collisions
 			//if hitting east side
 			if(this.x > this.boundaryRight - 5) {
@@ -149,12 +152,17 @@
                     console.log('player smash');
                 }
 
-                obj.speedY *= -1;
-                obj.speedX *= -1;
-                obj.x = obj.x + obj.speedX * (cp.core.delta * _deltaSlow); // times momentum
-                obj.y = obj.y + obj.speedY * (cp.core.delta * _deltaSlow); // times momentum            
-                this.x = this.x + this.speedX * (cp.core.delta * _deltaSlow); // times momentum
-                this.y = this.y + this.speedY * (cp.core.delta * _deltaSlow); // times momentum
+                if(!collided)
+                {
+                    collided = true;
+                    collisionTimer = 100;
+                    obj.speedY *= -1;
+                    obj.speedX *= -1;
+                    obj.x = obj.x + obj.speedX * (cp.core.delta * _deltaSlow); // times momentum
+                    obj.y = obj.y + obj.speedY * (cp.core.delta * _deltaSlow); // times momentum            
+                    this.x = this.x + this.speedX * (cp.core.delta * _deltaSlow); // times momentum
+                    this.y = this.y + this.speedY * (cp.core.delta * _deltaSlow); // times momentum
+                }
  
 
             // Must be a powerup
@@ -179,6 +187,16 @@
     	type: 'a',
 
     	update: function(){
+    	    // Update timers
+    	    /*if(collided)
+    	    {
+                collisionTimer = collisionTimer - cp.core.delta;
+                if(collisionTimer <= 0) {
+                    collided = false;
+                    collisionTimer = 0;
+                }
+    	    }*/
+    	    
     		//// Update our input
             if (window.DeviceMotionEvent) {
                 this.speedX = Math.round(cp.input.accel.x / 10 * -1);
@@ -209,18 +227,15 @@
                 
                 // Decay speed
                 if((!cp.input.press('up')) && (!cp.input.press('down'))) {
-                    if(this.speedY > 0)
-                    {
+                    if(this.speedY > 0) {
                         this.speedY -= 1;
-                    } else if(this.speedY < 0){
+                    } else if(this.speedY < 0) {
                         this.speedY += 1;
                     }
                 } if(!(cp.input.press('left')) && (!cp.input.press('right'))) {
-                    if(this.speedX < 0)
-                    {
+                    if(this.speedX < 0) {
                         this.speedX += 1;
-                    } else if(this.speedX > 0)
-                    {
+                    } else if(this.speedX > 0) {
                         this.speedX -= 1;
                     }
                 }
@@ -236,6 +251,7 @@
         color: '#f00',
 
     	update: function(){
+            //collisionTimer = collisionTimer - cp.core.delta;
     		//// Speed, Position is updated by the server
     		this._super();
     	},
