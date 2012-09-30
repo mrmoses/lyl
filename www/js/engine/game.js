@@ -11,22 +11,32 @@ To-Do: Add logic for objects loading with cp.imgCount and cp.imgLoaded
 var cp = cp || {};
 
 (function (cp) {
+    var _private = {
+        arraySort: function (arrayTarget, property) {
+            arrayTarget.sort(function (b, a) {
+                return a[property] - b[property];
+            });
+        }
+    };
+
     cp.game = {
         // TODO: Currently broken and needs a complete re-write, DO NOT USE!!!
         // Manually force sorts all items present on the screen based upon their zIndex
-        sort: function(loc) {
+        sort: function (property) {
+            _private.arraySort(cp.core.storage, property);
+
             // Loop through storage
                 // Get all elements with a zIndex
                 // https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Array/sort
 
-            // Get index of this
-            var index = cp.storage.indexOf(this);
-
-            // Delete old location
-            cp.storage.splice(index, 1);
-
-            // Inject new location
-            cp.storage.splice(loc, 0, this);
+            //// Get index of this
+            //var index = cp.storage.indexOf(this);
+            //
+            //// Delete old location
+            //cp.storage.splice(index, 1);
+            //
+            //// Inject new location
+            //cp.storage.splice(loc, 0, this);
         },
 
         // You may get all entities by a contained value name.

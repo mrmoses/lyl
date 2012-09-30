@@ -18,6 +18,7 @@ var cp = cp || {};
             y: 0,
             width: 0,
             height: 0,
+            index: 0,
 
             // Offsets the image from the hitbox
             offsetX: 0,
