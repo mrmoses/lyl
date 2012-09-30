@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title>Lose Your Lemmings</title>
+    <link rel="stylesheet" type="text/css" href="style/style.css" media="all" />
+    <meta name="apple-touch-fullscreen" content="yes" />
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="/images/big-lemming-icon.png">
+    <!-- Favicon For everything else -->
+    <link rel="shortcut icon" href="favicon.ico">
+
+    <!-- iOS -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="apple-touch-startup-image" href="/images/icon.png">
+
+    <meta name="viewport" content="width=device-width, maximum-scale=1.0, user-scalable=no">
+</head>
+
+<body>
+    <div id="container">
+        <canvas id="canvas">
+            Download Google Chrome to play this game now!
+        </canvas>
+    </div>
+
+    <!-- COMPILER_REPLACE -->
+    <!-- Load all files in development -->
+    <script type="text/javascript" src="js/engine/all.js"></script>
+
+    <!-- Execute logic from assembled engine -->
+    <script type="text/javascript" src="js/setup.js"></script>
+    <!-- END_COMPILER_REPLACE -->
+
+    <script src="/socket.io/socket.io.js"></script>
+	<script type="text/javascript">
+		console.log("socketizing sockets");
+	  var socket = io.connect();
+	  
+	  socket.on('clientlog',function(data) {
+	    console.log(data.msg);
+	  });
+	  
+	  //server will send request to spawn a player
+	  socket.on('spawn-active-player', function(data) {
+	  	console.log("you are an active player", data);
+	  	cp.game.spawn('ActivePlayer', data.id, data.x, data.y);
+	  });
+	  
+	  //server will send request to spawn a player
+	  socket.on('spawn-remote-player', function(data) {
+	  	console.log("adding remote player", data);
+	  	cp.game.spawn('RemotePlayer', data.id, data.x, data.y);
+	  });
+	  
+	  socket.on('entity-client-update', function(data) {
+	  	var entity = cp.game.entityGetVal('id',data.id)[0];
+	  	console.log('update entity', entity, data);
+	  	for(var prop in data) {
+	  		console.log("updating entity", prop, entity[prop], data[prop])
+	  		entity[prop] = data[prop];
+	  	}
+	  });
+	  
+	  socket.on('entity-kill', function(data) {
+	  	var entity = cp.game.entityGetVal('id',data.id)[0];
+	  	console.log('killing entity', entity, data);
+	  	entity.kill();
+	  });
+	</script>
+</body>
+
+</html>
