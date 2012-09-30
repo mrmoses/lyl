@@ -30,6 +30,7 @@
         width: 80,
         height: 80,
         color: '#00f',
+        mass: 3,
 
         angle: 0,
 
@@ -159,16 +160,20 @@
                 // Who hit who?
                 if (_private.calcMag(this) > _private.calcMag(obj)) {
                     console.log('enemy smash');
+                    cp.game.spawn('LemmingExplosion', this.x, this.y);
                 } else {
                     console.log('player smash');
+                    cp.game.spawn('LemmingExplosion', obj.x, obj.y);
                 }
 
-                if(!collided)
+                if(this.collided == false)
                 {
-                    collided = true;
-                    collisionTimer = 100;
-                    obj.speedY *= -1;
-                    obj.speedX *= -1;
+                    this.collided = true;
+                    this.collisionTimer = 100;
+                    obj.speedY *= -obj.mass;
+                    obj.speedX *= -obj.mass;
+                    this.speedY *= -this.mass;
+                    this.speedX *= -this.mass;
                     obj.x = obj.x + obj.speedX * (cp.core.delta * _deltaSlow); // times momentum
                     obj.y = obj.y + obj.speedY * (cp.core.delta * _deltaSlow); // times momentum
                     this.x = this.x + this.speedX * (cp.core.delta * _deltaSlow); // times momentum
@@ -199,14 +204,14 @@
 
     	update: function(){
     	    // Update timers
-    	    /*if(collided)
+    	    if(this.collided == true)
     	    {
-                collisionTimer = collisionTimer - cp.core.delta;
-                if(collisionTimer <= 0) {
-                    collided = false;
-                    collisionTimer = 0;
+                this.collisionTimer = this.collisionTimer - cp.core.delta;
+                if(this.collisionTimer <= 0) {
+                    this.collided = false;
+                    this.collisionTimer = 0;
                 }
-    	    }*/
+    	    }
 
     		//// Update our input
             if (window.DeviceMotionEvent) {
