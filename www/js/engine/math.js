@@ -10,6 +10,11 @@ var cp = cp || {};
 
 (function (cp) {
     cp.math = {
+        // round to two decimal places
+        round: function (num) {
+            return Math.round(num * 100) / 100;
+        },
+
         // Random should only be run in the init for best practice
         random: function(max, min) {
             if (!min) min = 1;
