@@ -27,7 +27,7 @@
 
         width: 80,
         height: 80,
-        color: '#f0f',
+        color: '#00f',
 
         angle: 0,
 
@@ -165,7 +165,7 @@
             //cp.stats.incrementData(6);
 
            // cp.game.spawn('Continue', this);
-           // this._super();
+           this._super();
         }
 
     });
@@ -244,6 +244,7 @@
 
     cp.template.RemotePlayer = cp.template.Player.extend({
     	type: 'b',
+        color: '#f00',
 
     	update: function(){
     		//// Speed, Position is updated by the server
