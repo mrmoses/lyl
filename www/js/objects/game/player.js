@@ -36,7 +36,7 @@
         angle: 0,
 
         collisionTimer: 0,
-        timerDuration: 300,
+        timerDuration: 100,
         collided: false,
 
         speedX: 0,
@@ -113,8 +113,6 @@
         update: function () {
             
             // Calculate Magnitude
-            this.magnitude = _private.calcMag(this);
-            this.normalize();
             
             this.angle += cp.core.delta * 0.3;
 
@@ -125,8 +123,8 @@
             this._super();
 
             // update our position based on our speed
-            this.x = cp.math.round(this.x + this.maxSpeed * this.speedX * (cp.core.delta * _deltaSlow)); // times momentum
-            this.y = cp.math.round(this.y + this.maxSpeed * this.speedY * (cp.core.delta * _deltaSlow)); // times momentum
+            this.x = cp.math.round(this.x + this.speedX * (cp.core.delta * _deltaSlow)); // times momentum
+            this.y = cp.math.round(this.y + this.speedY * (cp.core.delta * _deltaSlow)); // times momentum
 
 
 			// Determine boundary collisions
@@ -159,13 +157,6 @@
 		turn: function(direction) {
 			this.angle = (this.angle + direction * this.turnRate) % (2 * Math.PI);
 		},
-		
-		normalize: function() {
-		    if(this.magnitude > 0) {
-        	    this.speedX = cp.math.round(this.speedX / this.magnitude);
-        	    this.speedY = cp.math.round(this.speedY / this.magnitude);
-		    }
-		},
 
         collide: function (obj) {
             if (obj.name === 'player') {
@@ -175,18 +166,31 @@
                     obj.collided = true;
                     obj.collisionTimer = obj.timerDuration;
                     // Who hit who?
-                    if (this.magnitude > obj.magnitude) {
+                    if (_private.calcMag(this) > _private.calcMag(obj)) {
                         console.log('enemy smash');
                         this.mass -= .05;
                         this.playerSize -= .05;
                         obj.mass += .05;  
                         obj.playerSize += 1;
                         
+                        this.speedX = -1 * this.mass * .5 * obj.speedX;
+                        this.speedY = -1 * this.mass * .5 * obj.speedY;
+                        obj.speedX = -1 * obj.mass * 1.5 * this.speedX;
+                        obj.speedY = -1 * obj.mass * 1.5 * this.speedY;
+                        
+                        /*
+                        this.speedY = cp.math.roud(2*obj.mass* obj.mass + this.speedY(this.mass - obj.mass)) / (this.mass + obj.mass);
+                        this.speedX = cp.math.roud(2*obj.mass* obj.mass + this.speedX(this.mass - obj.mass)) / (this.mass + obj.mass);
+                        obj.speedY = cp.math.roud(2*this.mass* this.mass + obj.speedY(obj.mass - this.mass)) / (this.mass + obj.mass);
+                        obj.speedX = cp.math.roud(2*this.mass* this.mass + obj.speedX(obj.mass - this.mass)) / (this.mass + obj.mass);
+                        */
+                        /*
                         // Set our speeds and their speeds  
                         this.speedY = cp.math.round((-1 * obj.speedX * obj.mass)/this.mass);
                         this.speedX = cp.math.round((-1 * obj.speedY * obj.mass)/this.mass);                
-                        obj.speedY = cp.math.round((-1 * this.mass * this.speedY)/obj.mass);
-                        obj.speedX = cp.math.round((-1 * this.mass * this.speedX)/obj.mass);
+                        obj.speedY = cp.math.round((this.mass * this.speedY)/obj.mass);
+                        obj.speedX = cp.math.round((this.mass * this.speedX)/obj.mass);
+                        */
                         cp.game.spawn('LemmingExplosion', this.x, this.y);
 
                     } else {
@@ -197,17 +201,31 @@
                         obj.mass -= .05;
                         obj.playerSize -= 1;
                         
+                        obj.speedX = -1 * obj.mass * .5 * this.speedX;
+                        obj.speedY = -1 * obj.mass * .5 * this.speedY;                        
+                        this.speedX = -1 * this.mass * 1.5 * obj.speedX;
+                        this.speedY = -1 * this.mass * 1.5 * obj.speedY;
+                        /*
                         // Set our speeds and their speeds           
                         obj.speedY = cp.math.round((-1 * this.mass * this.speedY)/obj.mass);
                         obj.speedX = cp.math.round((-1 * this.mass * this.speedX)/obj.mass);                  
-                        this.speedY = cp.math.round((-1 * obj.speedX * obj.mass)/this.mass);
-                        this.speedX = cp.math.round((-1 * obj.speedY * obj.mass)/this.mass); 
+                        this.speedY = cp.math.round((obj.speedX * obj.mass)/this.mass);
+                        this.speedX = cp.math.round((obj.speedY * obj.mass)/this.mass); 
+                        */
                         cp.game.spawn('LemmingExplosion', obj.x, obj.y);
                     }
-                    obj.x = cp.math.round(obj.x + obj.maxSpeed * obj.speedX * (cp.core.delta * _deltaSlow));
-                    obj.y = cp.math.round(obj.y + obj.maxSpeed * obj.speedY * (cp.core.delta * _deltaSlow));
-                    this.x = cp.math.round(this.x + this.maxSpeed * this.speedX * (cp.core.delta * _deltaSlow));
-                    this.y = cp.math.round(this.y + this.maxSpeed * this.speedY * (cp.core.delta * _deltaSlow));
+                    
+                    /*
+                    this.speedY = cp.math.roud(2*obj.mass* obj.mass + this.speedY(this.mass - obj.mass)) / (this.mass + obj.mass);
+                    this.speedX = cp.math.roud(2*obj.mass* obj.mass + this.speedX(this.mass - obj.mass)) / (this.mass + obj.mass);
+                    obj.speedY = cp.math.roud(2*this.mass* this.mass + obj.speedY(obj.mass - this.mass)) / (this.mass + obj.mass);
+                    obj.speedX = cp.math.roud(2*this.mass* this.mass + obj.speedX(obj.mass - this.mass)) / (this.mass + obj.mass);
+                    */  
+                    
+                    obj.x = cp.math.round(obj.x + obj.speedX * (cp.core.delta * _deltaSlow));
+                    obj.y = cp.math.round(obj.y + obj.speedY * (cp.core.delta * _deltaSlow));
+                    this.x = cp.math.round(this.x + this.speedX * (cp.core.delta * _deltaSlow));
+                    this.y = cp.math.round(this.y + this.speedY * (cp.core.delta * _deltaSlow));
                 }
             }   
         },
