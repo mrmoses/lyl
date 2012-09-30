@@ -278,8 +278,8 @@ io.sockets.on('connection', function (socket) {
 		entities[this.clientId] = {
 			id: player2,
 			type:'player',
-			x:300,
-			y:300
+			x:1024-100,
+			y:768-100
 		};
 		
 		//spawn this on already connected screens
