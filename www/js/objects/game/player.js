@@ -265,7 +265,12 @@
     	type: 'b',
         color: '#f00',
 
+<<<<<<< HEAD
         init: function () {
+=======
+        init: function (serverID, x, y) {
+            this._super(serverID, x, y);
+>>>>>>> c5114f67deed7db0b2f5592f2fa28c75e36286ed
             var animSheet = new cp.animate.sheet('ball-alt.png', 80, 80);
             this.animPlayer = new cp.animate.cycle(animSheet, 1, [0]);
             this._super();
