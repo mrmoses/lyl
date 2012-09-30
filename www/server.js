@@ -53,7 +53,11 @@ var server = {
         this.server = this.http.createServer(this.app).listen(PORT);
         console.log('listening on ' + PORT);
         
-        this.app.get('/reset', function (req, res) {
+        this.app.get('/arena', function (req, res) {
+			res.sendfile(__dirname + '/arena.html');
+		});
+
+        this.app.get('/armageddon', function (req, res) {
         	console.log('reseting server');
         	player1 = false;
         	player2 = false;
@@ -62,7 +66,8 @@ var server = {
         		io.sockets.emit('entity-kill', entities[id]);
         	}
         	entities = {};
-        	res.send('This house has been cleaned.');
+    		io.sockets.emit('armageddon', entities[id]);
+    		res.sendfile(__dirname + '/armageddon.html');
         });
 
         return this.server;
