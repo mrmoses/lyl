@@ -322,11 +322,14 @@ io.sockets.on('connection', function (socket) {
     	}
     	
     	socket.emit('game-won');
+    	socket.disconnect();
   		
   		if(data.id == player1) {
 	  		clients[player2].emit('game-lost');
+	  		clients[player2].disconnect();
   		} else {
 	  		clients[player1].emit('game-lost');
+	  		clients[player1].disconnect();
   		}
     	
 		io.sockets.emit('game-over');
