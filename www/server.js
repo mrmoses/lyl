@@ -53,6 +53,18 @@ var server = {
 
         this.server = this.http.createServer(this.app).listen(PORT);
         console.log('listening on ' + PORT);
+        
+        this.app.get('/reset', function (req, res) {
+        	console.log('reseting server');
+        	player1 = false;
+        	player2 = false;
+        	for(var id in entities) {
+        		console.log("killing entity " + id);
+        		io.sockets.emit('entity-kill', entities[id]);
+        	}
+        	entities = {};
+        	res.send('This house has been cleaned.');
+        });
 
         return this.server;
     },
@@ -225,7 +237,6 @@ var app = server.init();
 /* Multiplayer Dragons be here */
 var player1 = '';
 var player2 = '';
-var viewers = []; //array to hold viewers
 var entities = {};
 
 /* */
@@ -233,7 +244,6 @@ io = require('socket.io').listen(app);
 io.set('log level', 1);
 io.sockets.on('connection', function (socket) {
 	this.clientId = socket.id;
-	console.log('player connected');
 	
 	// sends message to client to let them know they are connected
 	socket.emit('clientlog', {msg:"sockets are socketized"});
@@ -293,16 +303,18 @@ io.sockets.on('connection', function (socket) {
 	
 	/* when a client disconnects */
   	socket.on('disconnect', function () {
-		io.sockets.emit('user disconnected');
+		//io.sockets.emit('user disconnected');
   		if(socket.id == player1) {
   			console.log("player 1 disconnected");
+			io.sockets.emit('entity-kill', entities[id]);
   			delete entities[player1];
   			player1 = false;
   		}
   		if(socket.id == player2) {
   			console.log("player 2 disconnected");
+			io.sockets.emit('entity-kill', entities[id]);
   			delete entities[player2];
-  			player1 = false;
+  			player2 = false;
   		}
   	});
 });
