@@ -58,8 +58,12 @@ var server = {
         	console.log('reseting server');
         	player1 = false;
         	player2 = false;
+        	for(var id in entities) {
+        		console.log("killing entity " + id);
+        		io.sockets.emit('entity-kill', entities[id]);
+        	}
         	entities = {};
-        	res.send('ohai');
+        	res.send('This house has been cleaned.');
         });
 
         return this.server;
@@ -302,11 +306,13 @@ io.sockets.on('connection', function (socket) {
 		//io.sockets.emit('user disconnected');
   		if(socket.id == player1) {
   			console.log("player 1 disconnected");
+			io.sockets.emit('entity-kill', entities[id]);
   			delete entities[player1];
   			player1 = false;
   		}
   		if(socket.id == player2) {
   			console.log("player 2 disconnected");
+			io.sockets.emit('entity-kill', entities[id]);
   			delete entities[player2];
   			player2 = false;
   		}
