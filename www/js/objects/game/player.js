@@ -10,7 +10,7 @@
 
     var _deltaSlow = 1/30;
 
-    var _playerSize = 10;
+    var _playerSize = 5;
 
     var _debug = false;
 
@@ -18,10 +18,7 @@
         calcMag: function (obj) {
             var speedCalc = obj.speedX * obj.speedX + obj.speedY * obj.speedY;
             speedCalc = Math.sqrt(speedCalc);
-            return cp.math.round(speedCalc);
-        },
-        calcMom: function (obj) {
-            var momentum = this.calcMag(obj) * obj.mass;
+            return speedCalc;
         }
     };
 
@@ -39,10 +36,12 @@
         angle: 0,
 
         collisionTimer: 0,
+        timerDuration: 300,
         collided: false,
 
         speedX: 0,
         speedY: 0,
+        magnitude: 0,
         accelRate: 0.2,
         maxSpeed: 15,
         minSpeed: -15,
@@ -62,6 +61,7 @@
                 _gameHeight = cp.core.canvasHeight;
             }
 
+            this.deltaSlow = cp.math.round(this.deltaSlow);
             this.x = x
             this.y = y;
 
@@ -111,6 +111,11 @@
          * @todo The keyboard input for directions really needs to be optimized
          */
         update: function () {
+            
+            // Calculate Magnitude
+            this.magnitude = _private.calcMag(this);
+            this.normalize();
+            
             this.angle += cp.core.delta * 0.3;
 
             if (this.angle > 360) {
@@ -120,8 +125,8 @@
             this._super();
 
             // update our position based on our speed
-            this.x = this.x + this.speedX * (cp.core.delta * _deltaSlow); // times momentum
-            this.y = this.y + this.speedY * (cp.core.delta * _deltaSlow); // times momentum
+            this.x = cp.math.round(this.x + this.maxSpeed * this.speedX * (cp.core.delta * _deltaSlow)); // times momentum
+            this.y = cp.math.round(this.y + this.maxSpeed * this.speedY * (cp.core.delta * _deltaSlow)); // times momentum
 
 
 			// Determine boundary collisions
@@ -154,43 +159,57 @@
 		turn: function(direction) {
 			this.angle = (this.angle + direction * this.turnRate) % (2 * Math.PI);
 		},
+		
+		normalize: function() {
+		    if(this.magnitude > 0) {
+        	    this.speedX = cp.math.round(this.speedX / this.magnitude);
+        	    this.speedY = cp.math.round(this.speedY / this.magnitude);
+		    }
+		},
 
         collide: function (obj) {
             if (obj.name === 'player') {
-                // Who hit who?
-                if (_private.calcMag(this) > _private.calcMag(obj)) {
-                    console.log('enemy smash');
-                    this.mass -= .05;
-                    obj.mass += .05;
-                    cp.game.spawn('LemmingExplosion', this.x, this.y);
-                } else {
-                    this.ass += .05;
-                    Object.mass -= .05;
-                    console.log('player smash');
-                    cp.game.spawn('LemmingExplosion', obj.x, obj.y);
-                }
-
-                if(this.collided == false)
-                {
+                if(this.collided == false && obj.collided == false) {
                     this.collided = true;
-                    this.collisionTimer = 100;
-                    obj.speedY *= -this.mass;
-                    obj.speedX *= -this.mass;
-                    this.speedY *= -obj.mass;
-                    this.speedX *= -obj.mass;
-                    obj.x = obj.x + obj.speedX * (cp.core.delta * _deltaSlow); // times momentum
-                    obj.y = obj.y + obj.speedY * (cp.core.delta * _deltaSlow); // times momentum
-                    this.x = this.x + this.speedX * (cp.core.delta * _deltaSlow); // times momentum
-                    this.y = this.y + this.speedY * (cp.core.delta * _deltaSlow); // times momentum
+                    this.collisionTimer = this.timerDuration;  
+                    obj.collided = true;
+                    obj.collisionTimer = obj.timerDuration;
+                    // Who hit who?
+                    if (this.magnitude > obj.magnitude) {
+                        console.log('enemy smash');
+                        this.mass -= .05;
+                        this.playerSize -= .05;
+                        obj.mass += .05;  
+                        obj.playerSize += 1;
+                        
+                        // Set our speeds and their speeds  
+                        this.speedY = cp.math.round((-1 * obj.speedX * obj.mass)/this.mass);
+                        this.speedX = cp.math.round((-1 * obj.speedY * obj.mass)/this.mass);                
+                        obj.speedY = cp.math.round((-1 * this.mass * this.speedY)/obj.mass);
+                        obj.speedX = cp.math.round((-1 * this.mass * this.speedX)/obj.mass);
+                        cp.game.spawn('LemmingExplosion', this.x, this.y);
+
+                    } else {
+                        console.log('player smash');
+                        // Transfer Mass
+                        this.mass += .05;
+                        this.playerSize += 1;
+                        obj.mass -= .05;
+                        obj.playerSize -= 1;
+                        
+                        // Set our speeds and their speeds           
+                        obj.speedY = cp.math.round((-1 * this.mass * this.speedY)/obj.mass);
+                        obj.speedX = cp.math.round((-1 * this.mass * this.speedX)/obj.mass);                  
+                        this.speedY = cp.math.round((-1 * obj.speedX * obj.mass)/this.mass);
+                        this.speedX = cp.math.round((-1 * obj.speedY * obj.mass)/this.mass); 
+                        cp.game.spawn('LemmingExplosion', obj.x, obj.y);
+                    }
+                    obj.x = cp.math.round(obj.x + obj.maxSpeed * obj.speedX * (cp.core.delta * _deltaSlow));
+                    obj.y = cp.math.round(obj.y + obj.maxSpeed * obj.speedY * (cp.core.delta * _deltaSlow));
+                    this.x = cp.math.round(this.x + this.maxSpeed * this.speedX * (cp.core.delta * _deltaSlow));
+                    this.y = cp.math.round(this.y + this.maxSpeed * this.speedY * (cp.core.delta * _deltaSlow));
                 }
-
-
-            // Must be a powerup
-            } else {
-
-            }
-
-            //this.deathCount += 1;
+            }   
         },
 
         kill: function () {
@@ -263,6 +282,7 @@
                     }
                 }
             }
+
 
 			if(this.socketDelayCount) {
 				if(this.socketDelayCount % 2){
