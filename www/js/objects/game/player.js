@@ -46,7 +46,7 @@
         },
 
         checkMiddle: function (obj) {
-            if(canWin){
+            if(obj.hp <= _minHP +1){
                 if(this.x < _gameOver.Xmax && this.x > _gameOver.Xmin) {
                     if(this.y < _gameOver.Ymax && this.x > _gameOver.Ymin) {
                         // Win Stuff
@@ -213,7 +213,7 @@
                         obj.speedY = cp.math.round( -1 * this.mass * 1.25 * obj.speedY * 0.5);
 
                         cp.game.spawn('LemmingExplosion', this.x, this.y);
-
+                        socket.emit('lemmingexplosion', {x:this.x, y:this.y});
                     } else {
                         console.log('player smash');
                         // Transfer Mass
@@ -228,6 +228,7 @@
                         this.speedY = cp.math.round( -1 * obj.mass * 1.25 * this.speedY * 0.5);
 
                         cp.game.spawn('LemmingExplosion', obj.x, obj.y);
+                        socket.emit('lemmingexplosion', {x:obj.x, y:obj.y});
                     }
 
                     cp.audio.play('collide');

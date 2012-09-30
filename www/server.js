@@ -306,6 +306,12 @@ io.sockets.on('connection', function (socket) {
   		socket.broadcast.emit('entity-client-update', data);
   	});
 
+
+    socket.on('lemmingexplosion', function (data) {
+        socket.broadcast.emit('spawn-lemming-explosion', data);
+    });
+
+
 	// when a entity is updated on an active client, send data to other clients
   	socket.on('lemmegeddon', function () {
     	player1 = false;
