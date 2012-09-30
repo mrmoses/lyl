@@ -313,6 +313,36 @@ io.sockets.on('connection', function (socket) {
 
 
 	// when a entity is updated on an active client, send data to other clients
+  	socket.on('game-win', function (data) {
+  		socket.emit('game-won');
+  		
+  		if(data.id == player1) {
+  			clients[player1].disconnect();
+  			
+	  		clients[player2].emit('game-lost');
+	  		clients[player2].disconnect();
+  		} else {
+  			clients[player2].disconnect();
+  			
+	  		clients[player1].emit('game-lost');
+	  		clients[player1].disconnect();
+  		}
+  		delete clients[player1];
+  		delete clients[player2];
+    	player1 = false;
+    	player2 = false;
+    	
+    	//kill all entities
+    	for(var id in entities) {
+    		console.log("killing entity " + id);
+    		io.sockets.emit('entity-kill', entities[id]);
+    	}
+    	entities = {};
+    	
+		io.sockets.emit('game-over');
+  	});
+
+	// when a entity is updated on an active client, send data to other clients
   	socket.on('lemmegeddon', function () {
     	player1 = false;
     	player2 = false;

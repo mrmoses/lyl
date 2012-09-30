@@ -46,12 +46,13 @@
         },
 
         checkMiddle: function (obj) {
-            if(obj.hp <= _minHP +1){
-                if(this.x < _gameOver.Xmax && this.x > _gameOver.Xmin) {
-                    if(this.y < _gameOver.Ymax && this.x > _gameOver.Ymin) {
+
+            if(obj.hp <= _minHP+1){
+                if(obj.x < _gameOver.xMax && obj.x > _gameOver.xMin) {
+                    if(obj.y < _gameOver.yMax && obj.x > _gameOver.yMin) {
                         // Win Stuff
                         // CALL ARMEGEDDON
-                        socket.emit("game-win", obj);
+                        socket.emit("game-win", {id:obj.id});
                         // Play audio message
                         cp.audio.play('oh-yeah-high');
                     }

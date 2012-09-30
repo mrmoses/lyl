@@ -84,6 +84,24 @@
 	  	socket.disconnect();
 	  });
 	  
+	  socket.on('game-won', function(data) {
+	  	var el = document.getElementById('canvas');
+	  	el.classList.add('game-won');
+	  	socket.disconnect();
+	  });
+	  
+	  socket.on('game-lost', function(data) {
+	  	var el = document.getElementById('canvas');
+	  	el.classList.add('game-lost');
+	  	socket.disconnect();
+	  });
+	  
+	  socket.on('game-over', function(data) {
+	  	var el = document.getElementById('canvas');
+	  	el.classList.add('game-over');
+	  	socket.disconnect();
+	  });
+	  
 	  socket.on('entity-kill', function(data) {
 	  	var entity = cp.game.entityGetVal('id',data.id)[0];
 	  	console.log('killing entity', entity, data);
