@@ -1,14 +1,15 @@
 (function (cp) {
     // Debugging tools
-    //cp.debug.active = true;
-    //cp.debug.showCollisions = true;
+    cp.debug.active = true;
+    cp.debug.showCollisions = true;
 
     // List of scripts to load relative to js/objects
     cp.load.loadFiles = [
         'game/player',
         'game/level',
         'game/powerup',
-        'game/particle'
+        'game/particle',
+        'game/game-over'
     ];
 
     // Width, height, and game run logic

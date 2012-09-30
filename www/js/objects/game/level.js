@@ -24,6 +24,8 @@
                     cp.audio.newSound('collide', 5);
                 }
             }
+
+            cp.game.spawn('GameOver');
         },
 
         update: function () {
