@@ -244,6 +244,7 @@ io.sockets.on('connection', function (socket) {
 	this.clientId = socket.id;
 	clients[this.clientId] = socket;
 	
+	console.log("added " + this.clientId + " to clients");
 	io.sockets.emit('admin-new-socket', {id: socket.id});
 	
 	// sends message to client to let them know they are connected
@@ -251,7 +252,6 @@ io.sockets.on('connection', function (socket) {
 	
 	socket.on('user-connect', function(data) {
 		this.clientId = data.id;
-		console.log('user connect ' + this.clientId);
 		//if player 1 is available
 		if(!player1 || this.clientId == player1) {
 			player1 = this.clientId;
@@ -317,23 +317,24 @@ io.sockets.on('connection', function (socket) {
   	socket.on('game-win', function (data) {
   		//kill all entities
     	for(var id in entities) {
-    		console.log("killing entity " + id);
     		io.sockets.emit('entity-kill', entities[id]);
     	}
-    	
-    	socket.emit('game-won');
-    	socket.disconnect();
   		
   		if(data.id == player1) {
+			io.sockets.emit('adminlog', {msg: "player 1 won"});
 	  		clients[player2].emit('game-lost');
 	  		clients[player2].disconnect();
   		} else {
+			io.sockets.emit('adminlog', {msg: "player 2 won"});
 	  		clients[player1].emit('game-lost');
 	  		clients[player1].disconnect();
   		}
     	
+    	socket.emit('game-won');
+    	socket.disconnect();
+    	
 		io.sockets.emit('game-over');
-		
+
   		delete clients[player1];
   		delete clients[player2];
     	player1 = false;
@@ -345,7 +346,6 @@ io.sockets.on('connection', function (socket) {
   	socket.on('lemmegeddon', function () {
     	//kill all entities
     	for(var id in entities) {
-    		console.log("killing entity " + id);
     		io.sockets.emit('entity-kill', entities[id]);
     	}
     	player1 = false;
@@ -357,10 +357,8 @@ io.sockets.on('connection', function (socket) {
 
 	// when a entity is updated on an active client, send data to other clients
   	socket.on('admin-close', function (data) {
-  		console.log("admin-close");
   		clients[data.id].disconnect();
   		delete clients[data.id]
-  		console.log("disconnected " + data.id);
   	});
 
   	socket.on('admin-connect', function (data, fn) {
