@@ -8,8 +8,7 @@
         'game/player',
         'game/level',
         'game/powerup',
-        'game/particle',
-        'game/background'
+        'game/particle'
     ];
 
     // Width, height, and game run logic
@@ -21,7 +20,6 @@
         //cp.input.bind('arrowRight', 'right');
 
         //cp.game.spawn('ActivePlayer');
-        cp.game.spawn('Background');
         cp.game.spawn('Level');
         //cp.game.spawn('RemotePlayer');
     });
