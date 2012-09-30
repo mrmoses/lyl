@@ -19,7 +19,7 @@
 
 <body>
     <div id="container">
-    	<canvas id="canvas" style="background: url('images/background.png') no-repeat;">
+    	<canvas id="canvas">
             Download Google Chrome to play this game now!
         </canvas>
     </div>
@@ -60,6 +60,12 @@
 	  		console.log("updating entity", prop, entity[prop], data[prop])
 	  		entity[prop] = data[prop];
 	  	}
+	  });
+	  
+	  socket.on('armageddon', function(data) {
+	  	var el = document.getElementById('canvas');
+	  	el.classList.add('armageddon');
+	  	socket.disconnect();
 	  });
 	  
 	  socket.on('entity-kill', function(data) {

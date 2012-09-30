@@ -78,8 +78,8 @@ body {
 }
 
 #canvas {
+	background: #000 url(../images/background.png);
     border: 2px solid #777;
-    background: #fff;
     position: absolute;
     left: 0;
     right: 0;
@@ -87,6 +87,10 @@ body {
     bottom: 0;
     margin: auto;
     z-index: 1;
+}
+
+#canvas.armageddon {
+	background: url(../images/armageddon.jpg);
 }
 
 /* Debug - Nav */
