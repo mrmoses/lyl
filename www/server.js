@@ -45,7 +45,6 @@ var server = {
         
         //updated according to https://github.com/visionmedia/express/wiki/Migrating-from-2.x-to-3.x
         this.app = this.express();
-		
         this
             .setFolders()
             .setReturnJSON('images', ['.jpg', '.png', '.gif'], '/include/image-files.php')
@@ -100,6 +99,7 @@ var server = {
             SELF.app.use('/js', SELF.express.static(__dirname + '/js'));
             SELF.app.use('/images', SELF.express.static(__dirname + '/images'));
             SELF.app.use('/audio', SELF.express.static(__dirname + '/audio'));
+            SELF.app.use(SELF.express.favicon(__dirname + '/favicon.ico'));
             SELF.setCombinedJS('js/engine', '/js/engine/all.js');
             SELF.setRoot('index.html');
         });
