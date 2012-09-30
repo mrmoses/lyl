@@ -7,7 +7,8 @@
     cp.load.loadFiles = [
         'game/player',
         'game/level',
-        'game/powerup'
+        'game/powerup',
+        'game/particle'
     ];
 
     // Width, height, and game run logic
