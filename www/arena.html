@@ -66,6 +66,11 @@
 	  	cp.game.spawn('RemotePlayer', data.id, data.x, data.y);
 	  });
 	  
+	  socket.on('spawn-lemming-explosion', function(data) {
+	  	console.log("Spawning Lemming particles at ", data);
+	  	cp.game.spawn('LemmingExplosion', data.x, data.y);
+	  });
+	  
 	  socket.on('entity-client-update', function(data) {
 	  	var entity = cp.game.entityGetVal('id',data.id)[0];
 	  	for(var prop in data) {
