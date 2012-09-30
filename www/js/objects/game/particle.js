@@ -13,10 +13,10 @@
             this.speedY = cp.math.random(3) * cp.math.randomPosNeg();
 
             // Create and set an animation sheet (image, frame width, frame height)
-            var animSheet = new cp.animate.sheet('particle.png', 30, 29);
+            var animSheet = new cp.animate.sheet('particle.png', 25, 29);
 
             // Choose a particular animation sequence from the sheet
-            this.animStill = new cp.animate.cycle(animSheet, 1, [0]);
+            this.animStill = new cp.animate.cycle(animSheet, 0.2, [0, 1, 2]);
 
             this.animSet = this.animStill;
         },
