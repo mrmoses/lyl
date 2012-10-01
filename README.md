@@ -1,6 +1,6 @@
 # Lose Your Lemmings
 
-This project is the result of the IGDAChicago Game Jam 2012.
+This project is the result of the [http://igdachicago.com/](IGDA Chicago) [http://igdachicago.com/chicago-game-jam-2/](Game Jam 2012).
 
 Lose Your Lemmings is a HTML5, online multilpayer game built by 6 people in ~30 hours at IGDA Chicago Game Jam 2012.
 
