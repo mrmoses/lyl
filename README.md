@@ -1,6 +1,6 @@
 # Lose Your Lemmings
 
-Lose Your Lemmings is a HTML5, online multilpayer game built by 6 people at [IGDA Chicago](http://igdachicago.com/) [Game Jam 2012](http://igdachicago.com/chicago-game-jam-2/).
+Lose Your Lemmings is a HTML5, online multilpayer game built by 6 people at [IGDA Chicago](http://igdachicago.com/) [Game Jam 2012](http://t.co/hTUsmaBh).
 
 There should be a demo available here: http://goo.gl/XJU8F
 However it's on a free tier of dotCloud, so there is no uptime guarantee.
@@ -14,16 +14,16 @@ Exotic Drums music by Daniel Stephens http://opengameart.org/content/exotic-drum
 ## The Team
 
 ### Ash Blue
-blueashes.com
+[blueashes.com](http://blueashes.com)
 
 ### Rachel Blue
-rachelblueart.com
+[rachelblueart.com](http://rachelblueart.com)
 
 ### Rachel Ponce
-Twitter: [http://twitter.com/brainsforgames](@brainsforgames)
+Twitter: [@brainsforgames](http://twitter.com/brainsforgames)
 
 ### Joe Moses
-Twitter: [http://twitter.com/jnmoses](@jnmoses)
+Twitter: [@jnmoses](http://twitter.com/jnmoses)
 
 ### Trent Scheffert
 
