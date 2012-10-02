@@ -14,8 +14,7 @@ Exotic Drums music by Daniel Stephens http://opengameart.org/content/exotic-drum
 ## The Team
 
 ### Ash Blue
-[blueashes.com](http://blueashes.com)
-Twitter: [@ashbluewd](http://twitter.com/ashbluewd)
+Site: [blueashes.com](http://blueashes.com) | Twitter: [@ashbluewd](http://twitter.com/ashbluewd)
 
 ### Rachel Blue
 [rachelblueart.com](http://rachelblueart.com)
