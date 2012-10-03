@@ -8,7 +8,7 @@
     /** @type {number} Cached reference of game's play area */
     var _gameHeight = null;
 
-    var _deltaSlow = 1/30;
+    var _deltaSlow = cp.math.round(1 / 30);
 
     var _debug = false;
 
@@ -19,12 +19,13 @@
     var _minHP = 3;
 
     var _maxHP = 17;
+
     var _gameOver = {
         xMin: 453,
         xMax: 553,
         yMin: 336,
-        yMax: 436,
-    }
+        yMax: 436
+    };
 
     var _private = {
         calcMag: function (obj) {
@@ -55,7 +56,7 @@
                         // Play audio message
                         cp.audio.play('oh-yeah-high');
                     }
-                }  
+                }
             }
 
         }
@@ -96,7 +97,7 @@
             }
 
             this.deltaSlow = cp.math.round(this.deltaSlow);
-            this.x = x
+            this.x = x;
             this.y = y;
 
             // Set boundaries
@@ -149,9 +150,9 @@
                 }
             }
 
-        	var speedXAbs = (this.speedX > 0) ? this.speedX : this.speedX * -1;
-        	var speedYAbs = (this.speedY > 0) ? this.speedY : this.speedY * -1;
-        	var speedAbs =  speedXAbs + speedYAbs;
+            var speedXAbs = (this.speedX > 0) ? this.speedX : this.speedX * -1;
+            var speedYAbs = (this.speedY > 0) ? this.speedY : this.speedY * -1;
+            var speedAbs =  speedXAbs + speedYAbs;
 
             if (speedAbs < 6) {
             	this.angle += cp.core.delta * 0.1;
@@ -172,7 +173,7 @@
             this.y = cp.math.round(this.y + this.speedY * (cp.core.delta * _deltaSlow));
 
             _private.checkMiddle(this);
-                
+
 			// Determine boundary collisions
 			//if hitting east side
 			if(this.x > this.boundaryRight - 5) {
@@ -297,10 +298,7 @@
     			x: this.x,
     			y: this.y,
     			speedX: this.speedX,
-    			speedY: this.speedY,
-    			//mass: this.mass,
-    			//hp: ti
-    			
+    			speedY: this.speedY
 			};
 
     		socket.emit('entity-server-update', data);
@@ -310,10 +308,9 @@
     });
 
     cp.template.RemotePlayer = cp.template.Player.extend({
-    	type: 'b',
+        type: 'b',
         color: '#f00',
 
         collide: function() {}
     });
-
 }(cp));
