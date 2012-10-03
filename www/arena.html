@@ -19,10 +19,12 @@
 
 <body>
     <div id="container">
+        <p id="status-player" class="hide player-status">Spectator Mode</p>
+        <p id="status-spectator" class="hide player-status">Player Mode</p>
     	<canvas id="canvas">
             Download Google Chrome to play this game now!
         </canvas>
-        <div id="client-id" style="position: absolute; bottom: -40px; z-index: 1; left: 10px;" />
+        <div id="client-id" class="hide" style="position: absolute; bottom: -40px; z-index: 1; left: 10px;" />
     </div>
 
     <!-- COMPILER_REPLACE -->
@@ -37,71 +39,71 @@
 	<script type="text/javascript">
 		console.log("socketizing sockets");
 	  var socket = io.connect();
-	  
+
 	  socket.on('connect',function() {
 	  	var el = document.getElementById('client-id');
 	  	el.innerText = socket.socket.sessionid;
 	  	socket.emit('user-connect', {id:socket.socket.sessionid});
 	  });
-	  
+
 	  socket.on('disconnect',function() {
 	  	console.log("disconnected",socket.socket.sessionid);
 	  	var entity = cp.game.entityGetVal('id',socket.socket.sessionid)[0];
 	  	entity.kill();
 	  });
-	  
+
 	  socket.on('clientlog',function(data) {
 	    console.log(data.msg);
 	  });
-	  
+
 	  //server will send request to spawn a player
 	  socket.on('spawn-active-player', function(data) {
 	  	console.log("you are an active player", data);
 	  	cp.game.spawn('ActivePlayer', data.id, data.x, data.y);
 	  });
-	  
+
 	  //server will send request to spawn a player
 	  socket.on('spawn-remote-player', function(data) {
 	  	console.log("adding remote player", data);
 	  	cp.game.spawn('RemotePlayer', data.id, data.x, data.y);
 	  });
-	  
+
 	  socket.on('spawn-lemming-explosion', function(data) {
 	  	console.log("Spawning Lemming particles at ", data);
 	  	cp.game.spawn('LemmingExplosion', data.x, data.y);
 	  });
-	  
+
 	  socket.on('entity-client-update', function(data) {
 	  	var entity = cp.game.entityGetVal('id',data.id)[0];
 	  	for(var prop in data) {
 	  		entity[prop] = data[prop];
 	  	}
 	  });
-	  
+
 	  socket.on('lemmegeddon', function(data) {
 	  	var el = document.getElementById('canvas');
 	  	el.classList.add('lemmegeddon');
 	  	socket.disconnect();
 	  });
-	  
+
 	  socket.on('game-won', function(data) {
 	  	var el = document.getElementById('canvas');
 	  	el.classList.add('game-won');
 	  	socket.disconnect();
 	  });
-	  
+
 	  socket.on('game-lost', function(data) {
 	  	var el = document.getElementById('canvas');
 	  	el.classList.add('game-lost');
 	  	socket.disconnect();
 	  });
-	  
+
 	  socket.on('game-over', function(data) {
 	  	var el = document.getElementById('canvas');
 	  	el.classList.add('game-over');
 	  	socket.disconnect();
 	  });
-	  
+
 	  socket.on('entity-kill', function(data) {
 	  	var entity = cp.game.entityGetVal('id',data.id)[0];
 	  	console.log('killing entity', entity, data);
