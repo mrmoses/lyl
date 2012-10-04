@@ -39,53 +39,57 @@
 	<script type="text/javascript">
 		console.log("socketizing sockets");
 		var socket = io.connect();
-		
+
 		socket.on('connect',function() {
 		  $("#msgs").append($("<li />").html("you are " + socket.socket.sessionid));
 			socket.emit("admin-connect", {}, function(data) {
 				for(id in data) {
-					addClient(id);
+					addClient(data[id].name, id);
 				}
 			});
 		});
-		  
+
 		socket.on('clientlog',function(data) {
 		  console.log(data.msg);
 		});
-		  
+
 		socket.on('adminlog',function(data) {
 			$("#msgs").append($("<li />").html(data.msg));
 		});
-		  
+
 		socket.on('admin-new-socket',function(data) {
-			addClient(data.id);
+			addClient(data.name, data.id);
 		});
-			
+
 		socket.on('admin-closed-socket', function(data) {
 			$("#" + data.id).remove();
 		});
-		
+
 		$(function() {
 			$("#lemmegeddon").click(function() {
 				socket.emit("lemmegeddon");
+				return false;
 			});
-			
+
 			$("#prep-lemmegeddon").click(function() {
 				$("#lemged-button").slideToggle();
+				return false;
 			});
-			
+
 			$("#sockets").delegate(".disconnect", "click", function() {
 				socket.emit("admin-close", {id: $(this).data("id")});
+				return false;
 			})
 		});
-		
-		function addClient(id) {
+
+		function addClient(name, id) {
 			$("#sockets").append(
 				$('<li />').attr("id",id).append(
-					$('<span />').html(id + " - ")).append(
+					$('<span />').html(name + " - ")).append(
 					$('<a />')
 						.attr("href","#")
 						.attr("class","disconnect")
+						.attr("title", id)
 						.data("id", id)
 						.html("disconnect")
 				)

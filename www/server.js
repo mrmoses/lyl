@@ -43,24 +43,22 @@ var server = {
      */
     init: function () {
         SELF = this;
-        
+
         //updated according to https://github.com/visionmedia/express/wiki/Migrating-from-2.x-to-3.x
         this.app = this.express();
         this
             .setFolders()
             .setReturnJSON('images', ['.jpg', '.png', '.gif'], '/include/image-files.php')
             .getAudio('audio', '/include/sound-files.php');
-            
+
         this.auth = this.express.basicAuth('user', 'pass');
-        this.app.get('/admin', this.auth, function(req, res) { 
+        this.app.get('/admin', this.auth, function(req, res) {
 			res.sendfile(__dirname + '/admin.html');
 		});
 
         this.server = this.http.createServer(this.app).listen(PORT);
         this.multiplayer.init(this.server);
-        
-        console.log('listening on ' + PORT);
-        
+
         this.app.get('/arena', function (req, res) {
 			res.sendfile(__dirname + '/arena.html');
 		});
@@ -78,7 +76,6 @@ var server = {
     setFolders: function () {
         // Activates production mode so you can demo the compiled code
         this.app.configure('production', function () {
-            console.log('production');
 
             SELF.app.get('/js/all.js', function (req, res) {
                 var compiledJS = SELF.compiler.createJS();
@@ -159,7 +156,6 @@ var server = {
             }
         });
 
-        //console.log(filteredContents);
         this.app.get(request, function (req, res) {
             var compiledJS = _files.getCombinedFiles(_jsBuildOrder, ['js']);
             //var compiledJS = '';

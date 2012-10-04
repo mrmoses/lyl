@@ -6,26 +6,41 @@
 
     var SELF = null;
 
+    var PLAYER_MESSAGE = document.getElementById('status-player');
+
+    var SPECTATOR_MESSAGE = document.getElementById('status-spectator');
+
     cp.template.Level = cp.template.Entity.extend({
         name: 'level',
 
         init: function () {
-            if (SELF === null) {
-                // Used to determine the width of the game's play area
-                this.bind();
-
-                if (!_mute) {
-                    cp.audio
-                        .newSound('music')
-                        .play('music');
-
-                    cp.audio.newSound('loser');
-                    cp.audio.newSound('oh-yeah-high');
-                    cp.audio.newSound('collide', 5);
-                }
+            if (SELF !== null) {
+                return this;
             }
 
-            cp.game.spawn('GameOver');
+            SELF = this;
+
+            // Used to determine the width of the game's play area
+            this.bind();
+
+            if (!_mute) {
+                cp.audio
+                    .newSound('music')
+                    .play('music');
+
+                cp.audio.newSound('loser');
+                cp.audio.newSound('oh-yeah-high');
+                cp.audio.newSound('collide', 5);
+            }
+
+            // Player active
+            if (cp.game.entityGetVal('name', 'players') !== false) {
+                PLAYER_MESSAGE.classList.remove('hide');
+
+            // Just a spectator
+            } else {
+                SPECTATOR_MESSAGE.classList.remove('hide');
+            }
         },
 
         update: function () {
