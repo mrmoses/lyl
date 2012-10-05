@@ -89,6 +89,14 @@ body {
     z-index: 1;
 }
 
+#client-id {
+	font-size: 0.6em;
+	/* *
+	display: none;
+	visibility: hidden;
+	/* */
+}
+
 #canvas.lemmegeddon {
 	background: url(../images/lemmegeddon.jpg);
 }

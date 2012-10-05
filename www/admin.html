@@ -40,27 +40,27 @@
 		console.log("socketizing sockets");
 		var socket = io.connect();
 
+		//when the server responds to the admin connection
 		socket.on('connect',function() {
 		  $("#msgs").append($("<li />").html("you are " + socket.socket.sessionid));
 			socket.emit("admin-connect", {}, function(data) {
 				for(id in data) {
-					addClient(data[id].name, id);
+					addClient(data[id].type, id);
 				}
 			});
 		});
 
-		socket.on('clientlog',function(data) {
-		  console.log(data.msg);
-		});
-
+		// show messages from the server
 		socket.on('adminlog',function(data) {
 			$("#msgs").append($("<li />").html(data.msg));
 		});
 
+		//when a new client connects
 		socket.on('admin-new-socket',function(data) {
-			addClient(data.name, data.id);
+			addClient(data.type, data.id);
 		});
 
+		//when a socket is closed
 		socket.on('admin-closed-socket', function(data) {
 			$("#" + data.id).remove();
 		});
@@ -82,10 +82,10 @@
 			})
 		});
 
-		function addClient(name, id) {
+		function addClient(type, id) {
 			$("#sockets").append(
 				$('<li />').attr("id",id).append(
-					$('<span />').html(name + " - ")).append(
+					$('<span />').html(type + " - ")).append(
 					$('<a />')
 						.attr("href","#")
 						.attr("class","disconnect")

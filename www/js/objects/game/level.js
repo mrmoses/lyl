@@ -6,10 +6,6 @@
 
     var SELF = null;
 
-    var PLAYER_MESSAGE = document.getElementById('status-player');
-
-    var SPECTATOR_MESSAGE = document.getElementById('status-spectator');
-
     cp.template.Level = cp.template.Entity.extend({
         name: 'level',
 
@@ -31,15 +27,6 @@
                 cp.audio.newSound('loser');
                 cp.audio.newSound('oh-yeah-high');
                 cp.audio.newSound('collide', 5);
-            }
-
-            // Player active
-            if (cp.game.entityGetVal('name', 'players') !== false) {
-                PLAYER_MESSAGE.classList.remove('hide');
-
-            // Just a spectator
-            } else {
-                SPECTATOR_MESSAGE.classList.remove('hide');
             }
         },
 

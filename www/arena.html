@@ -19,12 +19,11 @@
 
 <body>
     <div id="container">
-        <p id="status-player" class="hide player-status">Spectator Mode</p>
-        <p id="status-spectator" class="hide player-status">Player Mode</p>
+        <p id="status-player" class="hide player-status">Player Mode <br /><span id="client-id"></span></p>
+        <p id="status-spectator" class="hide player-status">Spectator Mode</p>
     	<canvas id="canvas">
             Download Google Chrome to play this game now!
         </canvas>
-        <div id="client-id" class="hide" style="position: absolute; bottom: -40px; z-index: 1; left: 10px;" />
     </div>
 
     <!-- COMPILER_REPLACE -->
@@ -37,19 +36,35 @@
 
     <script src="/socket.io/socket.io.js"></script>
 	<script type="text/javascript">
+	    var PLAYER_MESSAGE = document.getElementById('status-player');
+		var SPECTATOR_MESSAGE = document.getElementById('status-spectator');
+    
 		console.log("socketizing sockets");
-	  var socket = io.connect();
+	  	var socket = io.connect();
 
 	  socket.on('connect',function() {
 	  	var el = document.getElementById('client-id');
 	  	el.innerText = socket.socket.sessionid;
-	  	socket.emit('user-connect', {id:socket.socket.sessionid});
+	  	socket.emit('user-connect', {id:socket.socket.sessionid}, function(data) {
+            // Player active
+            if (data.type == 'player') {
+                PLAYER_MESSAGE.classList.remove('hide');
+            // Just a spectator
+            } else if (data.type = 'viewer'){
+                SPECTATOR_MESSAGE.classList.remove('hide');
+            }
+	  	});
 	  });
 
 	  socket.on('disconnect',function() {
-		//if this was an active player, kill their entity
-	  	var entity = cp.game.entityGetVal('id',socket.socket.sessionid)[0];
-	  	entity.kill();
+	  	PLAYER_MESSAGE.parentNode.removeChild(PLAYER_MESSAGE);
+	  	SPECTATOR_MESSAGE.parentNode.removeChild(SPECTATOR_MESSAGE);
+	  	
+	  	//kill all entities
+	  	var entities = cp.game.entityGetVal('id');
+	  	for(var i = entities.length; i--; ) {
+	  		entities[i].kill();
+	  	}
 	  });
 
 	  socket.on('clientlog',function(data) {
@@ -98,6 +113,7 @@
 	  });
 
 	  socket.on('entity-kill', function(data) {
+	  	console.log("killing entity " + data.id);
 	  	var entity = cp.game.entityGetVal('id',data.id)[0];
 	  	entity.kill();
 	  });
