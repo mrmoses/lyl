@@ -21,10 +21,10 @@
     var _maxHP = 17;
 
     var _gameOver = {
-        xMin: 453,
-        xMax: 553,
-        yMin: 336,
-        yMax: 436
+        xMin: 487,
+        xMax: 537,
+        yMin: 359,
+        yMax: 409
     };
 
     var _private = {
@@ -47,10 +47,9 @@
         },
 
         checkMiddle: function (obj) {
-
             if(obj.hp <= _minHP+1){
                 if(obj.x < _gameOver.xMax && obj.x > _gameOver.xMin) {
-                    if(obj.y < _gameOver.yMax && obj.x > _gameOver.yMin) {
+                    if(obj.y < _gameOver.yMax && obj.y > _gameOver.yMin) {
                         // Win Stuff
                         socket.emit("game-win", {id:obj.id});
                         // Play audio message
@@ -171,8 +170,6 @@
             // update our position based on our speed
             this.x = cp.math.round(this.x + this.speedX * (cp.core.delta * _deltaSlow));
             this.y = cp.math.round(this.y + this.speedY * (cp.core.delta * _deltaSlow));
-
-            _private.checkMiddle(this);
 
 			// Determine boundary collisions
 			//if hitting east side
@@ -297,11 +294,15 @@
     			id: this.id,
     			x: this.x,
     			y: this.y,
+    			width: this.width,
+    			height: this.height,
     			speedX: this.speedX,
     			speedY: this.speedY
 			};
 
     		socket.emit('entity-server-update', data);
+    		
+            _private.checkMiddle(this);
 
             this._super();
     	}
